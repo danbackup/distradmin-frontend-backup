@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import {
   fetchUtils,
   GET_LIST,
@@ -33,6 +34,7 @@ export const DataProvider = (
    * @returns {Object} { url, options } The HTTP request parameters
    */
   const convertDataRequestToHTTP = (type, resource, params) => {
+    console.log(type, resource);
     let url = '';
     const options = {};
     switch (type) {
@@ -49,7 +51,6 @@ export const DataProvider = (
         url = `${apiUrl}/${resource}/${params.id}`;
         options.method = 'PUT';
         // Omit created_at/updated_at(RDS) and createdAt/updatedAt(Mongo) in request body
-
         options.body = JSON.stringify({ data: params.data, id: params.id });
         break;
       case CREATE:
@@ -82,35 +83,46 @@ export const DataProvider = (
     const s = params.sort;
     const sort =
       s.field === ''
-        ? 'sort[0]=updated_at:DESC'
+        ? 'sort[0]=updated_at:desc'
         : 'sort[0]=' + s.field + ':' + s.order;
 
-    // // Handle FILTER
-    // const f = params.filter;
-    // let filter = '';
-    // const keys = Object.keys(f);
+    // Handle FILTER
+    const f = params.filter;
+    console.log('Filter: ', f);
+    let filter = '';
+    const keys = Object.keys(f);
+    for (let i = 0; i < keys.length; i++) {
+      //react-admin uses q filter in several components and strapi use _q
+      if (keys[i] === 'q' && f.q !== '') {
+        filter += '_q=' + f[keys[i]] + (keys[i + 1] ? '&' : '');
+      } else if (Array.isArray(f[keys[i]])) {
+        const arrayOfFilterValues = f[keys[i]];
+        arrayOfFilterValues.forEach((val, idx) => {
+          filter += `&filters[${keys[i]}][$in][${idx}]=${val}`;
+        });
+      } else {
+        filter +=
+          `&filters[${keys[i]}]=` + f[keys[i]] + (keys[i + 1] ? '&' : '');
+      }
+    }
+    if (params.id && params.target && params.target.indexOf('_id') !== -1) {
+      const target = params.target.substring(0, params.target.length - 3);
+      console.log('target: ' + target);
+      filter += '&' + target + '=' + params.id;
+    }
 
-    // //add search filter
-    // if (f.q) {
-    //   filter += `_q=${f.q}&`;
-    // }
-
-    // const remainingKeys = keys.filter((key) => key !== 'q');
-
-    // if (remainingKeys) {
-    //   filter += `filters`;
-    //   remainingKeys.forEach((key) => {
-    //     filter += `[${key}][$eq]=${f[key]}`;
-    //   });
-    // }
-
+    // filters[id][$in][0]=3&filters[id][$in][1]=6&filters[id][$in][2]=8
+    // filters[$in][0][id]=1&filters[$in][1][id]=2&populate=%2A    
+    
+    
     // Handle PAGINATION
     const { page, perPage } = params.pagination;
-    const start = (page - 1) * perPage;
-    const limit = perPage; //for strapi the _limit params indicate the amount of elements to return in the response
-    const range = 'pagination[start]=' + start + '&pagination[limit]=' + limit;
+    console.log(page, perPage);
+    const pagination =
+      'pagination[page]=' + page + '&pagination[pageSize]=' + perPage;
 
-    return sort + '&' + range;
+    console.log('returning from filter: ', sort + '&' + pagination + filter);
+    return sort + '&' + pagination + filter;
   };
 
   // Determines if there are new files to upload
@@ -310,14 +322,18 @@ export const DataProvider = (
 
 const flattenNestedRelations = (response) => {
   const responseKeys = Object.keys(response);
+  console.log(response);
   const flattenedResponse = {};
+
   for (let i = 0; i < responseKeys.length; i++) {
     let key = responseKeys[i];
     //This checks for array and object because arr is an object in js
     if (typeof response[key] !== 'object') {
       continue;
     }
+
     if (key === 'data' && Array.isArray(response[key])) {
+      console.log('if statement A');
       //flattens the attribbutes to the same level as the ids.
       flattenedResponse.data = response.data.map((obj) => {
         return {
@@ -347,11 +363,11 @@ const flattenNestedRelations = (response) => {
         });
       });
     } else {
+      console.log('if statement B');
       flattenedResponse.data = {
         ...response.data.attributes,
         id: response.data.id,
       };
-
       Object.keys(flattenedResponse.data).forEach((key) => {
         if (flattenedResponse.data[key] === null) {
           //do nothin
@@ -363,7 +379,7 @@ const flattenNestedRelations = (response) => {
             flattenedResponse.data[key] = [...flattenedResponse.data[key].data];
             flattenedResponse.data[key] = flattenedResponse.data[key].map(
               (element) => {
-                return { ...element.attributes, id: element.id };
+                return element.id;
               }
             );
           }
