@@ -8,20 +8,21 @@ import {
   ChipField,
   EditButton,
   ReferenceArrayField,
-  DateField,
-  NumberField,
   FunctionField,
+  BooleanField,
 } from 'react-admin';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
 export const MusicianList = () => {
   return (
     <List>
-      <Datagrid>
+      <Datagrid rowClick='show'>
         <FunctionField
           render={(record) => `${record.fName} ${record.lName}`}
           label='Name'
         />
         <TextField source='location' />
+
         <ReferenceArrayField
           source='instruments'
           reference='musicians'
@@ -33,6 +34,9 @@ export const MusicianList = () => {
             </SingleFieldList>
           </ArrayField>
         </ReferenceArrayField>
+        <TextField source='notes' />
+        <BooleanField source='canMD' label='MD?' TrueIcon={MilitaryTechIcon} />
+
         <EditButton />
       </Datagrid>
     </List>
