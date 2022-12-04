@@ -93,16 +93,18 @@ export const DataProvider = (
     const keys = Object.keys(f);
     for (let i = 0; i < keys.length; i++) {
       //react-admin uses q filter in several components and strapi use _q
-      if (keys[i] === 'q' && f.q !== '') {
-        filter += '_q=' + f[keys[i]] + (keys[i + 1] ? '&' : '');
-      } else if (Array.isArray(f[keys[i]])) {
-        const arrayOfFilterValues = f[keys[i]];
-        arrayOfFilterValues.forEach((val, idx) => {
-          filter += `&filters[${keys[i]}][$in][${idx}]=${val}`;
-        });
-      } else {
-        filter +=
-          `&filters[${keys[i]}]=` + f[keys[i]] + (keys[i + 1] ? '&' : '');
+      if (f[keys[i]]) {
+        if (keys[i] === 'q' && f.q !== '') {
+          filter += '_q=' + f[keys[i]] + (keys[i + 1] ? '&' : '');
+        } else if (Array.isArray(f[keys[i]])) {
+          const arrayOfFilterValues = f[keys[i]];
+          arrayOfFilterValues.forEach((val, idx) => {
+            filter += `&filters[${keys[i]}][$in][${idx}]=${val}`;
+          });
+        } else {
+          filter +=
+            `&filters[${keys[i]}]=` + f[keys[i]] + (keys[i + 1] ? '&' : '');
+        }
       }
     }
     if (params.id && params.target && params.target.indexOf('_id') !== -1) {
@@ -112,12 +114,10 @@ export const DataProvider = (
     }
 
     // filters[id][$in][0]=3&filters[id][$in][1]=6&filters[id][$in][2]=8
-    // filters[$in][0][id]=1&filters[$in][1][id]=2&populate=%2A    
-    
-    
+    // filters[$in][0][id]=1&filters[$in][1][id]=2&populate=%2A
+
     // Handle PAGINATION
     const { page, perPage } = params.pagination;
-    console.log(page, perPage);
     const pagination =
       'pagination[page]=' + page + '&pagination[pageSize]=' + perPage;
 
@@ -202,6 +202,7 @@ export const DataProvider = (
     console.log('DATAPROVIDER LOGS', { resource, type });
     switch (type) {
       case GET_ONE:
+        console.log("GET ONE response (flattened) ", flattenNestedRelations(response.json));
         return {
           data: flattenNestedRelations(response.json),
         };
@@ -322,7 +323,6 @@ export const DataProvider = (
 
 const flattenNestedRelations = (response) => {
   const responseKeys = Object.keys(response);
-  console.log(response);
   const flattenedResponse = {};
 
   for (let i = 0; i < responseKeys.length; i++) {
