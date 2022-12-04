@@ -1,26 +1,17 @@
 import * as React from 'react';
 import {
   Show,
-  List,
   TextField,
-  EmailField,
   DateField,
   FunctionField,
-  ChipField,
-  SingleFieldList,
-  ReferenceManyField,
-  ArrayField,
   NumberField,
-  useRecordContext,
   TabbedShowLayout,
   Tab,
   Datagrid,
   BooleanField,
-  ReferenceArrayField,
-  ReferenceField,
-  ReferenceOneField,
-  WithRecord,
+  Button,
 } from 'react-admin';
+import { Card } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
@@ -39,11 +30,35 @@ export const EventShow = () => {
     >
       <TabbedShowLayout>
         <Tab label='Details'>
+          <div>
+            <Button
+              label='Google Document'
+              size='small'
+              alignIcon='left'
+              variant='contained'
+              color='secondary'
+              sx={{ width: 200 }}
+            />
+          </div>
           <TextField label='Package' source='package.data.attributes.name' />
           <TextField source='client' label='Client' />
           <DateField source='date' />
           <TextField source='location' />
           <TextField source='notes' emptyText='None' />
+          <Card>
+            <CustomReferenceManyField
+              reference='sets'
+              target='event.data.id'
+              resource='sets'
+            >
+              Sets
+              <Datagrid rowClick='show'>
+                <TextField source='name' />
+                <TextField source='start' />
+                <TextField source='end' />
+              </Datagrid>
+            </CustomReferenceManyField>
+          </Card>
         </Tab>
         <Tab label='Finance'>
           <NumberField
@@ -65,7 +80,11 @@ export const EventShow = () => {
           />
         </Tab>
         <Tab label='Musicians'>
-          <CustomReferenceManyField reference='jobs' target='event.data.id'>
+          <CustomReferenceManyField
+            reference='jobs'
+            target='event.data.id'
+            resource='jobs'
+          >
             <Datagrid>
               <BooleanField source='md' TrueIcon={MilitaryTechIcon} />
               <FunctionField
@@ -77,6 +96,13 @@ export const EventShow = () => {
               <TextField
                 source='instrument.data.attributes.name'
                 label='Instrument'
+              />
+              <BooleanField source='hotelRequired' />
+              <NumberField
+                label='Wage'
+                source='wage'
+                options={{ style: 'currency', currency: 'GBP' }}
+                emptyText={'Not agreed'}
               />
             </Datagrid>
           </CustomReferenceManyField>
