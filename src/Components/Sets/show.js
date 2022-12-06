@@ -8,12 +8,23 @@ import {
   Tab,
   TabbedShowLayout,
   TextField,
+  useRecordContext,
 } from 'react-admin';
 import CustomReferenceManyField from '../custom/CustomReferenceManyField';
 
+const Title = () => {
+  const record = useRecordContext();
+  if (!record) return null;
+  return (
+    <span>
+      {record.event.data.attributes.client} - {record.name}
+    </span>
+  );
+};
+
 export const SetShow = () => {
   return (
-    <Show>
+    <Show title={<Title />}>
       <TabbedShowLayout>
         <Tab label='Details'>
           <TextField source='name' />
