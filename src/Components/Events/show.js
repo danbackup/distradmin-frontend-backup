@@ -22,7 +22,7 @@ export const EventShow = () => {
         <FunctionField
           render={(record) =>
             record
-              ? `${record.client} ${record.package.data.attributes.name}`
+              ? `${record.client} - ${record.package.data.attributes.name}`
               : 'null'
           }
         />
