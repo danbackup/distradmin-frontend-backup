@@ -17,6 +17,7 @@ export const EventList = () => {
     <List>
       <Datagrid rowClick='show'>
         <DateField source='date' />
+        <TextField source='type' />
         <TextField source='package.data.attributes.name' label='Package' />
         <TextField source='client' label='Client' />
         <TextField source='location' label='Location' />

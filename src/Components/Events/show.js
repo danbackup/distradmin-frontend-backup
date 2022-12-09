@@ -12,6 +12,7 @@ import {
   Button,
   useRecordContext,
   useNotify,
+  useRefresh,
 } from 'react-admin';
 import { Card, Typography, Container } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -50,6 +51,7 @@ const FilteredSetsList = () => {
 
 export const EventShow = () => {
   const notify = useNotify();
+  const refresh = useRefresh();
   const [isClicked, setIsClicked] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
@@ -57,6 +59,7 @@ export const EventShow = () => {
       try {
         const result = await saveDocumentIdToDB(record, googleDocId);
         if (result.status === 200) {
+          refresh();
           setIsClicked(true);
           notify('Document created', { type: 'success' });
         }
@@ -135,6 +138,7 @@ export const EventShow = () => {
             }}
           />
           <TextField label='Package' source='package.data.attributes.name' />
+          <TextField source='type' />
           <TextField source='client' label='Client' />
           <DateField source='date' />
           <TextField source='location' />

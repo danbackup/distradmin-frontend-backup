@@ -25,7 +25,6 @@ import { PackageShow } from './Components/Packages/show';
 import { PackageCreate } from './Components/Packages/create';
 import firebase from 'firebase/compat/app';
 import { gapi } from 'gapi-script';
-import { updateSigninStatus } from './Google/requestAuthorization';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -54,16 +53,16 @@ const dataProvider = DataProvider('http://localhost:1337/api');
 const App = () => {
   React.useEffect(() => {
     const start = async () => {
-      await gapi.client
-        .init({
-          apiKey: firebaseConfig.apiKey,
-          discoveryDocs: [
-            'https://docs.googleapis.com/$discovery/rest?version=v1',
-          ],
-          clientId:
-            '513693582210-62rkmbjorrpe4fcau3041prm70i1889g.apps.googleusercontent.com',
-          scope: 'https://www.googleapis.com/auth/documents',
-        });
+      await gapi.client.init({
+        apiKey: firebaseConfig.apiKey,
+        discoveryDocs: [
+          'https://docs.googleapis.com/$discovery/rest?version=v1',
+        ],
+        clientId:
+          '513693582210-62rkmbjorrpe4fcau3041prm70i1889g.apps.googleusercontent.com',
+        scope:
+          'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive.file',
+      });
     };
     gapi.load('client:auth2', start);
   });
