@@ -9,8 +9,6 @@ export const EventEdit = () => {
         <TextInput source='client' validate={[required()]} />
         <TextInput source='location' />
         <TextInput source='notes' />
-        
-
       </SimpleForm>
     </Edit>
   );
