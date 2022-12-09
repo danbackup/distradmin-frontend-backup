@@ -13,7 +13,7 @@ import {
   BooleanField,
   useRecordContext,
 } from 'react-admin';
-import { Card } from '@mui/material';
+import { Card, Container, Typography } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
@@ -24,6 +24,51 @@ const Title = () => {
     <span>
       {record.fName} {record.lName}
     </span>
+  );
+};
+
+const FilteredEventList = () => {
+  const record = useRecordContext();
+  if (!record) return null;
+  return record.jobs.length === 0 ? (
+    <Card>
+      <Container>
+        <Typography variant='h5'>No Events</Typography>
+      </Container>
+    </Card>
+  ) : (
+    <Card>
+      <CustomReferenceManyField
+        reference='jobs'
+        target='musician.data.id'
+        resource='jobs'
+      >
+        <Datagrid>
+          <DateField
+            label='Date'
+            source='event.data.attributes.date'
+            sortable={false}
+          />
+          <TextField
+            label='Location'
+            source='event.data.attributes.location'
+            sortable={false}
+          />
+          <TextField
+            label='Instrument'
+            source='instrument.data.attributes.name'
+            sortable={false}
+          />
+          <NumberField
+            label='Wage'
+            source='wage'
+            options={{ style: 'currency', currency: 'GBP' }}
+            emptyText={'Not agreed'}
+          />
+          <BooleanField source='md' />
+        </Datagrid>
+      </CustomReferenceManyField>
+    </Card>
   );
 };
 
@@ -54,38 +99,7 @@ export const MusicianShow = () => {
           </CustomReferenceManyField>
         </Tab>
         <Tab label='Events'>
-          <Card>
-            <CustomReferenceManyField
-              reference='jobs'
-              target='musician.data.id'
-              resource='jobs'
-            >
-              <Datagrid>
-                <DateField
-                  label='Date'
-                  source='event.data.attributes.date'
-                  sortable={false}
-                />
-                <TextField
-                  label='Location'
-                  source='event.data.attributes.location'
-                  sortable={false}
-                />
-                <TextField
-                  label='Instrument'
-                  source='instrument.data.attributes.name'
-                  sortable={false}
-                />
-                <NumberField
-                  label='Wage'
-                  source='wage'
-                  options={{ style: 'currency', currency: 'GBP' }}
-                  emptyText={'Not agreed'}
-                />
-                <BooleanField source='md' />
-              </Datagrid>
-            </CustomReferenceManyField>
-          </Card>
+          <FilteredEventList />
         </Tab>
       </TabbedShowLayout>
     </Show>
