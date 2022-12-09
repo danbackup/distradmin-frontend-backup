@@ -17,12 +17,15 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PianoIcon from '@mui/icons-material/Piano';
 import { FirebaseAuthProvider } from 'react-admin-firebase';
-import CustomLoginPage from './CustomLoginPage';
-import firebase from 'firebase/compat/app';
+import CustomLoginPage from './Auth/CustomLoginPage';
 import { EventEdit } from './Components/Events/edit';
 import PackagesList from './Components/Packages/list';
 import NightlifeIcon from '@mui/icons-material/Nightlife';
 import { PackageShow } from './Components/Packages/show';
+import { PackageCreate } from './Components/Packages/create';
+import firebase from 'firebase/compat/app';
+import { gapi } from 'gapi-script';
+import { updateSigninStatus } from './Google/requestAuthorization';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -32,45 +35,80 @@ const firebaseConfig = {
   messagingSenderId: '513693582210',
   appId: '1:513693582210:web:85c65680f42dde5d47859b',
 };
+
 firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    user.getIdToken().then(function (idToken) {
+      console.log('JWT', idToken);
+      localStorage.setItem('jwt', idToken);
+      return idToken;
+    });
+  }
+});
 
 const authProvider = FirebaseAuthProvider(firebaseConfig);
 const dataProvider = DataProvider('http://localhost:1337/api');
 
-const App = () => (
-  <Admin
-    dataProvider={dataProvider}
-    authProvider={authProvider}
-    loginPage={CustomLoginPage}
-  >
-    <Resource
-      name='events'
-      edit={EventEdit}
-      list={EventList}
-      show={EventShow}
-      create={EventCreate}
-      icon={CalendarMonthIcon}
-    />
-    <Resource
-      name='musicians'
-      list={MusicianList}
-      create={MusicianCreate}
-      edit={MusicianEdit}
-      show={MusicianShow}
-      icon={GroupsIcon}
-    />
-    <Resource name='jobs' list={JobList} />
-    <Resource name='sets' show={SetShow} />
-    <Resource name='songs' />
-    <Resource
-      name='instruments'
-      list={InstrumentsList}
-      create={InstrumentCreate}
-      edit={InstrumentEdit}
-      icon={PianoIcon}
-      recordRepresentation='name'
-    />
-    <Resource name='packages' icon={NightlifeIcon} list={PackagesList} show={PackageShow}/>
-  </Admin>
-);
+const App = () => {
+  React.useEffect(() => {
+    const start = async () => {
+      await gapi.client
+        .init({
+          apiKey: firebaseConfig.apiKey,
+          discoveryDocs: [
+            'https://docs.googleapis.com/$discovery/rest?version=v1',
+          ],
+          clientId:
+            '513693582210-62rkmbjorrpe4fcau3041prm70i1889g.apps.googleusercontent.com',
+          scope: 'https://www.googleapis.com/auth/documents',
+        });
+    };
+    gapi.load('client:auth2', start);
+  });
+
+  return (
+    <Admin
+      dataProvider={dataProvider}
+      authProvider={authProvider}
+      loginPage={CustomLoginPage}
+    >
+      <Resource
+        name='events'
+        edit={EventEdit}
+        list={EventList}
+        show={EventShow}
+        create={EventCreate}
+        icon={CalendarMonthIcon}
+      />
+      <Resource
+        name='musicians'
+        list={MusicianList}
+        create={MusicianCreate}
+        edit={MusicianEdit}
+        show={MusicianShow}
+        icon={GroupsIcon}
+      />
+      <Resource name='jobs' list={JobList} />
+      <Resource name='sets' show={SetShow} />
+      <Resource name='songs' />
+      <Resource
+        name='instruments'
+        list={InstrumentsList}
+        create={InstrumentCreate}
+        edit={InstrumentEdit}
+        icon={PianoIcon}
+        recordRepresentation='name'
+      />
+      <Resource
+        name='packages'
+        icon={NightlifeIcon}
+        list={PackagesList}
+        show={PackageShow}
+        create={PackageCreate}
+      />
+    </Admin>
+  );
+};
 export default App;
