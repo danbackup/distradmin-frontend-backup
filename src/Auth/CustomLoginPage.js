@@ -1,30 +1,12 @@
 import React from 'react';
-import { Login } from 'react-admin';
-import firebase from 'firebase/compat/app';
-import StyledFirebaseAuth from '../Components/custom/styledFirebaseAuth';
+import { useRedirect } from 'react-admin';
 
-const uiConfig = {
-  signInFlow: 'popup',
-  signInSuccessUrl: '/#/',
-  signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+const CustomLoginPage = (props) => {
+  const redirect = useRedirect();
+  const redirectToGoogle = () => {
+    redirect('http://localhost:1337/api/connect/google');
+  };
+  return <button onClick={() => redirectToGoogle()}>LOG IN</button>;
 };
-
-const SignInScreen = () => {
-  return (
-    <StyledFirebaseAuth firebaseAuth={firebase.auth()} uiConfig={uiConfig} />
-  );
-};
-
-const CustomLoginForm = (props) => (
-  <div>
-    <SignInScreen />
-  </div>
-);
-
-const CustomLoginPage = (props) => (
-  <Login {...props}>
-    <CustomLoginForm {...props} />
-  </Login>
-);
 
 export default CustomLoginPage;

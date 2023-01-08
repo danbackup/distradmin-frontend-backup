@@ -58,12 +58,17 @@ export const EventShow = () => {
     const saveDocWrapper = async (googleDocId) => {
       try {
         const result = await saveDocumentIdToDB(record, googleDocId);
-        if (result.status === 200) {
-          refresh();
-          setIsClicked(true);
-          notify('Document created', { type: 'success' });
+        if (result.status !== 200) {
+          throw result.status;
         }
+        refresh();
+        setIsClicked(true);
+        notify('Document created', { type: 'success' });
       } catch (error) {
+        notify(
+          'There was an error when creating the google doc and linking it to this event',
+          { type: 'error' }
+        );
         console.error(error);
       }
     };

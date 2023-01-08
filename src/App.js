@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Admin, Resource } from 'react-admin';
+import { Admin, CustomRoutes, fetchUtils, Resource } from 'react-admin';
 import { EventCreate } from './Components/Events/create';
 import { EventList } from './Components/Events/list';
 import { EventShow } from './Components/Events/show';
@@ -25,6 +25,9 @@ import { PackageShow } from './Components/Packages/show';
 import { PackageCreate } from './Components/Packages/create';
 import firebase from 'firebase/compat/app';
 import { gapi } from 'gapi-script';
+import { AuthProvider } from './Auth/AuthProvider';
+import { Route } from 'react-router-dom';
+import { GoogleRedirect } from './Auth/GoogleRedirect';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -47,8 +50,16 @@ firebase.auth().onAuthStateChanged(function (user) {
   }
 });
 
-const authProvider = FirebaseAuthProvider(firebaseConfig);
-const dataProvider = DataProvider('http://localhost:1337/api');
+const httpClient = (url, options = {}) => {
+  if (!options.headers) {
+    options.headers = new Headers({ Accept: 'application/json' });
+  }
+  const token = localStorage.getItem('token');
+  options.headers.set('Authorization', `Bearer ${token}`);
+  return fetchUtils.fetchJson(url, options);
+};
+
+const dataProvider = DataProvider('http://localhost:1337/api', httpClient);
 
 const App = () => {
   React.useEffect(() => {
@@ -70,9 +81,12 @@ const App = () => {
   return (
     <Admin
       dataProvider={dataProvider}
-      authProvider={authProvider}
+      authProvider={AuthProvider}
       loginPage={CustomLoginPage}
     >
+      <CustomRoutes noLayout>
+        <Route path='/connect/google/redirect' element={<GoogleRedirect />} />
+      </CustomRoutes>
       <Resource
         name='events'
         edit={EventEdit}

@@ -17,7 +17,7 @@ export const JobList = () => {
         <FunctionField
           label='Musician'
           render={(record) =>
-            `${record.musician.data.attributes.fName} ${record.musician.data.attributes.lName}`
+            `${record.musician.data.attributes?.fName} ${record.musician.data.attributes?.lName}`
           }
         />
         <TextField source='md' label='MD' />

@@ -13,10 +13,10 @@ export const MusicianCreate = () => {
   return (
     <Create>
       <SimpleForm>
-        <TextInput source='fName' validate={[required()]} />
-        <TextInput source='lName' validate={[required()]} />
+        <TextInput source='fName' label='First Name' validate={[required()]} />
+        <TextInput source='lName' label='Last Name' validate={[required()]} />
         <TextInput source='location' validate={[required()]} />
-        <TextInput source='Notes' />
+        <TextInput source='notes' />
         <BooleanInput source='canMD' label='Can MD?' />
 
         <ReferenceArrayInput

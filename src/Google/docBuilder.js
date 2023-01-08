@@ -7,6 +7,7 @@ export const saveDocumentIdToDB = async (record, googleDocId) => {
   console.log('REC', record);
   console.log('googleDocId', googleDocId);
   // Call strapi api to update event record with new google doc id in db
+  const token = localStorage.getItem('token');
   const response = await fetch(
     `http://localhost:1337/api/events/${record.id}`,
     {
@@ -14,6 +15,7 @@ export const saveDocumentIdToDB = async (record, googleDocId) => {
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         data: {

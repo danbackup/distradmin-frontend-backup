@@ -10,7 +10,9 @@ import {
   ReferenceArrayField,
   DateField,
   NumberField,
+  FunctionField,
 } from 'react-admin';
+import { CircularProgressWithLabel } from '../custom/circularProgress';
 
 export const EventList = () => {
   return (
@@ -22,30 +24,22 @@ export const EventList = () => {
         <TextField source='client' label='Client' />
         <TextField source='location' label='Location' />
         <TextField source='team' label='Team' />
-        <NumberField
+        {/* <NumberField
           label='Price'
           source='gross'
           options={{ style: 'currency', currency: 'GBP' }}
-        />
+        /> */}
         <NumberField
           source='profit'
           options={{ style: 'currency', currency: 'GBP' }}
         />
-
-        {/* <ReferenceArrayField source="teachers" reference="teachers" sortable={false}>
-                <ArrayField label="Teachers" source="teachers">
-                    <SingleFieldList linkType="show">
-                        <ChipField source="fName" />
-                    </SingleFieldList>
-                </ArrayField>
-            </ReferenceArrayField> */}
-        {/* <ReferenceArrayField source="rooms" reference="rooms" sortable={false}>
-                <ArrayField label="Rooms" source="rooms">
-                    <SingleFieldList linkType="list">
-                        <ChipField source="name" />
-                    </SingleFieldList>
-                </ArrayField>
-            </ReferenceArrayField> */}
+        <FunctionField
+          label='Paid'
+          render={(record) => {
+            const progress = 100 - (record.amountDue / record.gross) * 100;
+            return <CircularProgressWithLabel value={progress} />;
+          }}
+        />
         <EditButton />
       </Datagrid>
     </List>

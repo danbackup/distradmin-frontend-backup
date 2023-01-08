@@ -34,7 +34,6 @@ export const MusicianList = () => {
             </SingleFieldList>
           </ArrayField>
         </ReferenceArrayField>
-        <TextField source='notes' />
         <BooleanField source='canMD' label='MD?' TrueIcon={MilitaryTechIcon} />
 
         <EditButton />
