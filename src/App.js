@@ -28,6 +28,7 @@ import { gapi } from 'gapi-script';
 import { AuthProvider } from './Auth/AuthProvider';
 import { Route } from 'react-router-dom';
 import { GoogleRedirect } from './Auth/GoogleRedirect';
+import { JobCreate } from './Components/Jobs/create';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -103,7 +104,7 @@ const App = () => {
         show={MusicianShow}
         icon={GroupsIcon}
       />
-      <Resource name='jobs' list={JobList} />
+      <Resource name='jobs' list={JobList} create={JobCreate} />
       <Resource name='sets' show={SetShow} />
       <Resource name='songs' />
       <Resource

@@ -175,7 +175,7 @@ export const EventShow = () => {
             target='event.data.id'
             resource='jobs'
           >
-            <Datagrid>
+            <Datagrid bulkActionButtons={false}>
               <BooleanField source='md' TrueIcon={MilitaryTechIcon} />
               <FunctionField
                 label='Musician'
