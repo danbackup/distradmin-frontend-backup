@@ -5,9 +5,9 @@ export const GoogleRedirect = async () => {
   const url = new URL(window.location.href);
   const accessToken = url.href.split('access_token=')[1];
   const redirect = useRedirect();
-  let gUser = null;
+
   const result = await fetch(
-    `http://localhost:1337/api/auth/google/callback?access_token=${accessToken}`
+    `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/callback?access_token=${accessToken}`
   );
 
   result
@@ -15,7 +15,7 @@ export const GoogleRedirect = async () => {
     .then(({ jwt, user }) => {
       console.log('user: ', user);
       localStorage.setItem('token', jwt);
-      redirect('http://localhost:3000');
+      redirect(process.env.REACT_APP_FRONTEND_URL);
     })
     .catch((e) => console.log(e));
 

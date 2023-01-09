@@ -3,7 +3,7 @@ import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 export const AuthProvider = async (type, params) => {
   if (
     window.location.href.includes(
-      'http://localhost:3000/connect/google/redirect?'
+      `${process.env.REACT_APP_FRONTEND_URL}/connect/google/redirect?`
     )
   ) {
     return Promise.resolve();

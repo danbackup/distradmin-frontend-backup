@@ -60,7 +60,7 @@ const httpClient = (url, options = {}) => {
   return fetchUtils.fetchJson(url, options);
 };
 
-const dataProvider = DataProvider('http://localhost:1337/api', httpClient);
+const dataProvider = DataProvider(`${process.env.REACT_APP_BACKEND_URL}/api`, httpClient);
 
 const App = () => {
   React.useEffect(() => {
