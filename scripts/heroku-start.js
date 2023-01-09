@@ -2,7 +2,8 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
+
 app.use(express.json());
 // Your static pre-build assets folder
 app.use(express.static(path.join(__dirname, '..', 'build')));
