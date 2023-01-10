@@ -12,6 +12,7 @@ import {
   Datagrid,
   BooleanField,
   useRecordContext,
+  ArrayField,
 } from 'react-admin';
 import { Card, Container, Typography } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -88,25 +89,12 @@ export const MusicianShow = () => {
             label='Can MD'
             TrueIcon={MilitaryTechIcon}
           />
-          {/* <CustomReferenceManyField
-            reference='instruments'
-            target='musician.data.id'
-            resource='instruments'
-          >
+
+          <ArrayField source='instruments'>
             <SingleFieldList>
-              <ChipField source='name' />
+              <ChipField source='attributes.name' />
             </SingleFieldList>
-          </CustomReferenceManyField> */}
-          <FunctionField
-            label='Instruments'
-            render={(record) => {
-              return record.instruments.attributes
-                ? record.instruments?.attributes?.forEach((attr) => (
-                    <div>attr.name</div>
-                  ))
-                : null;
-            }}
-          />
+          </ArrayField>
         </Tab>
         <Tab label='Events'>
           <FilteredEventList />
