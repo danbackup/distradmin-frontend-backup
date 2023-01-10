@@ -92,7 +92,7 @@ export const MusicianShow = () => {
 
           <ArrayField source='instruments'>
             <SingleFieldList>
-              <ChipField source='attributes.name' />
+              <ChipField source='id' />
             </SingleFieldList>
           </ArrayField>
         </Tab>
