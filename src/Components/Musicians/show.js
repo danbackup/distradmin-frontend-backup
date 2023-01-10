@@ -91,12 +91,10 @@ export const MusicianShow = () => {
             TrueIcon={MilitaryTechIcon}
           />
 
-          <ReferenceArrayField source='musicians' reference='instruments'>
-            <ArrayField label='Instruments' source='instruments'>
-              <SingleFieldList linkType='show'>
-                <ChipField source='name' />
-              </SingleFieldList>
-            </ArrayField>
+          <ReferenceArrayField source='instruments' reference='instruments'>
+            <SingleFieldList linkType='show'>
+              <ChipField source='name' />
+            </SingleFieldList>
           </ReferenceArrayField>
         </Tab>
         <Tab label='Events'>
