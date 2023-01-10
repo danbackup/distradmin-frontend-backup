@@ -1,12 +1,8 @@
 import * as React from 'react';
 import {
   SimpleForm,
-  TextInput,
   required,
   Create,
-  ReferenceArrayInput,
-  AutocompleteArrayInput,
-  DateInput,
   NumberInput,
   SelectInput,
   ReferenceInput,
