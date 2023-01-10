@@ -13,6 +13,7 @@ import {
   BooleanField,
   useRecordContext,
   ArrayField,
+  ReferenceArrayField,
 } from 'react-admin';
 import { Card, Container, Typography } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -90,11 +91,16 @@ export const MusicianShow = () => {
             TrueIcon={MilitaryTechIcon}
           />
 
-          <ArrayField source='instruments'>
-            <SingleFieldList>
-              <ChipField source='id' />
-            </SingleFieldList>
-          </ArrayField>
+          <ReferenceArrayField
+            source='instruments'
+            reference='musicians'
+          >
+            <ArrayField label='Instruments' source='instruments'>
+              <SingleFieldList linkType='show'>
+                <ChipField source='name' />
+              </SingleFieldList>
+            </ArrayField>
+          </ReferenceArrayField>
         </Tab>
         <Tab label='Events'>
           <FilteredEventList />
