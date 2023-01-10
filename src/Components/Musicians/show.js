@@ -88,7 +88,7 @@ export const MusicianShow = () => {
             label='Can MD'
             TrueIcon={MilitaryTechIcon}
           />
-          <CustomReferenceManyField
+          {/* <CustomReferenceManyField
             reference='instruments'
             target='musician.data.id'
             resource='instruments'
@@ -96,7 +96,17 @@ export const MusicianShow = () => {
             <SingleFieldList>
               <ChipField source='name' />
             </SingleFieldList>
-          </CustomReferenceManyField>
+          </CustomReferenceManyField> */}
+          <FunctionField
+            label='Instruments'
+            render={(record) => {
+              return record.instruments.attributes
+                ? record.instruments?.attributes?.forEach((attr) => (
+                    <div>attr.name</div>
+                  ))
+                : null;
+            }}
+          />
         </Tab>
         <Tab label='Events'>
           <FilteredEventList />
