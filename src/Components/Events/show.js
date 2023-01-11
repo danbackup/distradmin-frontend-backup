@@ -142,13 +142,21 @@ export const EventShow = () => {
               );
             }}
           />
-          <TextField label='Package' source='package.data.attributes.name' />
-          <TextField source='type' />
-          <TextField source='client' label='Client' />
-          <DateField source='date' />
-          <TextField source='location' />
+          <TextField
+            label='Package'
+            source='package.data.attributes.name'
+            emptyText='No package assigned'
+          />
+          <TextField source='type' emptyText='No event type assigned' />
+          <TextField
+            source='client'
+            label='Client'
+            emptyText='No client assigned'
+          />
+          <DateField source='date' emptyText='No date assigned' />
+          <TextField source='location' emptyText='No location' />
           <TextField source='notes' emptyText='None' />
-          <FilteredSetsList />
+          {/* <FilteredSetsList /> */}
         </Tab>
         <Tab label='Finance'>
           <NumberField
