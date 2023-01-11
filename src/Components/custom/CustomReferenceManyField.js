@@ -9,7 +9,7 @@ export const CustomReferenceManyField = ({
 }) => {
   const record = useRecordContext();
   if (!record) return null;
-  if (!record[resource]) return null;
+  if (!record[resource] || !record[resource].length) return null;
   return (
     <ReferenceManyField
       reference={reference}

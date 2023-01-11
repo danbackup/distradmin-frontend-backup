@@ -178,32 +178,42 @@ export const EventShow = () => {
           />
         </Tab>
         <Tab label='Musicians'>
-          <CustomReferenceManyField
-            reference='jobs'
-            target='event.data.id'
-            resource='jobs'
-          >
-            <Datagrid bulkActionButtons={false}>
-              <BooleanField source='md' TrueIcon={MilitaryTechIcon} />
-              <FunctionField
-                label='Musician'
-                render={(record) =>
-                  `${record.musician.data.attributes.fName} ${record.musician.data.attributes.lName}`
-                }
-              />
-              <TextField
-                source='instrument.data.attributes.name'
-                label='Instrument'
-              />
-              <BooleanField source='hotelRequired' />
-              <NumberField
-                label='Wage'
-                source='wage'
-                options={{ style: 'currency', currency: 'GBP' }}
-                emptyText={'Not agreed'}
-              />
-            </Datagrid>
-          </CustomReferenceManyField>
+          <FunctionField
+            render={(record) => {
+              return record?.jobs?.length === 0 ? (
+                <div>None</div>
+              ) : (
+                <Card>
+                  <CustomReferenceManyField
+                    reference='jobs'
+                    target='event.data.id'
+                    resource='jobs'
+                  >
+                    <Datagrid bulkActionButtons={false}>
+                      <BooleanField source='md' TrueIcon={MilitaryTechIcon} />
+                      <FunctionField
+                        label='Musician'
+                        render={(record) =>
+                          `${record.musician.data.attributes.fName} ${record.musician.data.attributes.lName}`
+                        }
+                      />
+                      <TextField
+                        source='instrument.data.attributes.name'
+                        label='Instrument'
+                      />
+                      <BooleanField source='hotelRequired' />
+                      <NumberField
+                        label='Wage'
+                        source='wage'
+                        options={{ style: 'currency', currency: 'GBP' }}
+                        emptyText={'Not agreed'}
+                      />
+                    </Datagrid>
+                  </CustomReferenceManyField>
+                </Card>
+              );
+            }}
+          />
         </Tab>
       </TabbedShowLayout>
     </Show>
