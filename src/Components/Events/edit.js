@@ -18,14 +18,14 @@ export const EventEdit = () => {
       <SimpleForm>
         <DateInput source='date' validate={[required()]} />
         <TextInput source='type' />
-        <ReferenceInput source='package' reference='packages'>
+        {/* <ReferenceInput source='package' reference='packages'>
           <SelectInput
             validate={[required()]}
             optionText='name'
             optionValue='id'
             // translateChoice={false}
           />
-        </ReferenceInput>
+        </ReferenceInput> */}
         <TextInput source='client' validate={[required()]} />
         <TextInput source='location' />
         <TextInput source='notes' />
