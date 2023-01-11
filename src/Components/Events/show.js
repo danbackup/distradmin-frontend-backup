@@ -105,7 +105,7 @@ export const EventShow = () => {
         <FunctionField
           render={(record) =>
             record
-              ? `${record.client} - ${record.package.data.attributes.name}`
+              ? `${record.client} - ${record.package?.data?.attributes.name}`
               : 'null'
           }
         />
@@ -142,11 +142,19 @@ export const EventShow = () => {
               );
             }}
           />
-          <TextField
+          <FunctionField
+            label='Package'
+            render={(record) => {
+              const data = record.package.data;
+              if (data === null) return 'None set';
+              return data.attributes.name;
+            }}
+          />
+          {/* <TextField
             label='Package'
             source='package.data.attributes.name'
             emptyText='No package assigned'
-          />
+          /> */}
           <TextField source='type' emptyText='No event type assigned' />
           <TextField
             source='client'
