@@ -51,7 +51,7 @@ export const EventCreate = () => {
 
         <TextInput source='notes' />
 
-        <ReferenceArrayInput
+        {/* <ReferenceArrayInput
           label='Musicians'
           reference='musicians'
           source='musicians'
@@ -63,7 +63,7 @@ export const EventCreate = () => {
             parse={(value) => value && value.map((v) => ({ id: v }))}
             format={(value) => value && value.map((v) => v.id)}
           />
-        </ReferenceArrayInput>
+        </ReferenceArrayInput> */}
 
         <TextInput source='team' />
       </SimpleForm>
