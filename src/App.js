@@ -73,8 +73,7 @@ const App = () => {
         discoveryDocs: [
           'https://docs.googleapis.com/$discovery/rest?version=v1',
         ],
-        clientId:
-          '513693582210-62rkmbjorrpe4fcau3041prm70i1889g.apps.googleusercontent.com',
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         scope:
           'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive.file',
       });
