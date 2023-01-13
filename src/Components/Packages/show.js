@@ -25,28 +25,24 @@ const Title = () => {
 
 const FilteredEventList = () => {
   const record = useRecordContext();
-  console.log("YOOOO", record);
+  console.log('YOOOO', record);
   if (!record) return null;
   return (
-    record.events.length === 0 ? (
-    <div>None</div>
-  ) : (
     <Card>
       <CustomReferenceManyField
         reference='events'
         target='package.data.id'
         resource='events'
       >
-        <Datagrid rowClick={'show'}>
+        <Datagrid rowClick={'show'} bulkActionButtons={false}>
           <DateField source='date' />
           <TextField source='client' />
           <TextField source='team' />
         </Datagrid>
       </CustomReferenceManyField>
     </Card>
-  ));
+  );
 };
-
 
 export const PackageShow = () => {
   return (

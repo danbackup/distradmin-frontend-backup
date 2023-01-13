@@ -8,8 +8,8 @@ import {
   NumberInput,
   ReferenceArrayInput,
   AutocompleteArrayInput,
-  SelectInput,
   ReferenceInput,
+  SelectInput,
 } from 'react-admin';
 
 export const EventEdit = () => {
@@ -18,14 +18,15 @@ export const EventEdit = () => {
       <SimpleForm>
         <DateInput source='date' validate={[required()]} />
         <TextInput source='type' />
-        {/* <ReferenceInput source='package' reference='packages'>
-          <SelectInput
-            validate={[required()]}
-            optionText='name'
-            optionValue='id'
-            // translateChoice={false}
-          />
-        </ReferenceInput> */}
+
+        <ReferenceInput
+          source='package.id'
+          reference='packages'
+          sortable={false}
+        >
+          <SelectInput label='Package' validate={[required()]} />
+        </ReferenceInput>
+
         <TextInput source='client' validate={[required()]} />
         <TextInput source='location' />
         <TextInput source='notes' />

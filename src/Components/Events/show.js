@@ -13,6 +13,7 @@ import {
   useRecordContext,
   useNotify,
   useRefresh,
+  ReferenceField,
 } from 'react-admin';
 import { Card, Typography, Container } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -103,11 +104,7 @@ export const EventShow = () => {
     <Show
       title={
         <FunctionField
-          render={(record) =>
-            record
-              ? `${record.client} - ${record.package?.data?.attributes.name}`
-              : 'null'
-          }
+          render={(record) => (record ? `${record.client}` : 'null')}
         />
       }
     >
@@ -142,19 +139,14 @@ export const EventShow = () => {
               );
             }}
           />
-          <FunctionField
+          <ReferenceField
+            source='package.id'
+            reference='packages'
+            sortable={false}
             label='Package'
-            render={(record) => {
-              const data = record.package.data;
-              if (data === null) return 'None set';
-              return data.attributes.name;
-            }}
-          />
-          {/* <TextField
-            label='Package'
-            source='package.data.attributes.name'
-            emptyText='No package assigned'
-          /> */}
+          >
+            <TextField source='name' />
+          </ReferenceField>
           <TextField source='type' emptyText='No event type assigned' />
           <TextField
             source='client'

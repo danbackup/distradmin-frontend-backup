@@ -7,6 +7,7 @@ import {
   DateField,
   NumberField,
   FunctionField,
+  ReferenceField,
 } from 'react-admin';
 import { CircularProgressWithLabel } from '../custom/circularProgress';
 
@@ -16,7 +17,14 @@ export const EventList = () => {
       <Datagrid rowClick='show'>
         <DateField source='date' />
         <TextField source='type' />
-        <TextField source='package.data.attributes.name' label='Package' />
+        <ReferenceField
+          source='package.data.id'
+          reference='packages'
+          sortable={false}
+          label='Package'
+        >
+          <TextField source='name' />
+        </ReferenceField>
         <TextField source='client' label='Client' />
         <TextField source='location' label='Location' />
         <TextField source='team' label='Team' />

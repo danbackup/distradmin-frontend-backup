@@ -52,6 +52,7 @@ export const DataProvider = (
         options.method = 'PUT';
         // Omit created_at/updated_at(RDS) and createdAt/updatedAt(Mongo) in request body
         options.body = JSON.stringify({ data: params.data, id: params.id });
+        console.log('PUT: ', JSON.stringify(options));
         break;
       case CREATE:
         url = `${apiUrl}/${resource}`;
@@ -202,7 +203,10 @@ export const DataProvider = (
     console.log('DATAPROVIDER LOGS', { resource, type });
     switch (type) {
       case GET_ONE:
-        console.log("GET ONE response (flattened) ", flattenNestedRelations(response.json));
+        console.log(
+          'GET ONE response (flattened) ',
+          flattenNestedRelations(response.json)
+        );
         return {
           data: flattenNestedRelations(response.json),
         };
@@ -370,18 +374,27 @@ const flattenNestedRelations = (response) => {
       };
       Object.keys(flattenedResponse.data).forEach((key) => {
         if (flattenedResponse.data[key] === null) {
-          //do nothin
+          console.log(key + ' is null');
         } else {
           if (
             flattenedResponse.data[key].hasOwnProperty('data') &&
             Array.isArray(flattenedResponse.data[key].data)
           ) {
             flattenedResponse.data[key] = [...flattenedResponse.data[key].data];
+            console.log(`if statement B1 ${key}`, flattenedResponse.data[key]);
             flattenedResponse.data[key] = flattenedResponse.data[key].map(
               (element) => {
                 return element.id;
               }
             );
+          }
+          if (key === 'package') {
+            console.log('PACKAGE', flattenedResponse.data[key]);
+            flattenedResponse.data[key] = {
+              id: flattenedResponse.data[key].data.id,
+              ...flattenedResponse.data[key].data.attributes,
+            };
+            console.log('PACKAGE AFTER', flattenedResponse.data[key]);
           }
         }
       });
