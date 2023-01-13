@@ -123,6 +123,7 @@ const App = () => {
         list={PackagesList}
         show={PackageShow}
         create={PackageCreate}
+        recordRepresentation='name'
       />
     </Admin>
   );
