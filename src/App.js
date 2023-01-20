@@ -21,6 +21,7 @@ import CustomLoginPage from './Auth/CustomLoginPage';
 import { EventEdit } from './Components/Events/edit';
 import PackagesList from './Components/Packages/list';
 import NightlifeIcon from '@mui/icons-material/Nightlife';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { PackageShow } from './Components/Packages/show';
 import { PackageCreate } from './Components/Packages/create';
 import firebase from 'firebase/compat/app';
@@ -29,6 +30,9 @@ import { AuthProvider } from './Auth/AuthProvider';
 import { Route } from 'react-router-dom';
 import { GoogleRedirect } from './Auth/GoogleRedirect';
 import { JobCreate } from './Components/Jobs/create';
+import UsersList from './Components/Users/list';
+import { UserCreate } from './Components/Users/create';
+import { UserEdit } from './Components/Users/edit';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -123,6 +127,14 @@ const App = () => {
         list={PackagesList}
         show={PackageShow}
         create={PackageCreate}
+        recordRepresentation='name'
+      />
+      <Resource
+        name='admins'
+        icon={AdminPanelSettingsIcon}
+        list={UsersList}
+        edit={UserEdit}
+        create={UserCreate}
         recordRepresentation='name'
       />
     </Admin>
