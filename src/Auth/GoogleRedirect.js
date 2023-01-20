@@ -12,9 +12,12 @@ export const GoogleRedirect = async () => {
 
   result
     .json()
-    .then(({ jwt, user }) => {
+    .then(async ({ jwt, user }) => {
       console.log('user: ', user);
-      localStorage.setItem('token', jwt);
+      const isAdmin = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/admins/check?email=${user.email}`
+      );
+      if (isAdmin.ok) localStorage.setItem('token', jwt);
       redirect(process.env.REACT_APP_FRONTEND_URL);
     })
     .catch((e) => console.log(e));

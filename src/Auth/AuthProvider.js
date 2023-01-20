@@ -9,7 +9,6 @@ export const AuthProvider = async (type, params) => {
     return Promise.resolve();
   }
   if (type === AUTH_LOGIN) {
-    console.log('LOGIN CALLED');
     return '/events';
   }
   if (type === AUTH_CHECK) {
