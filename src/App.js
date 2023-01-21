@@ -33,6 +33,7 @@ import { JobCreate } from './Components/Jobs/create';
 import UsersList from './Components/Users/list';
 import { UserCreate } from './Components/Users/create';
 import { UserEdit } from './Components/Users/edit';
+import { PackageEdit } from './Components/Packages/edit';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
@@ -127,6 +128,7 @@ const App = () => {
         list={PackagesList}
         show={PackageShow}
         create={PackageCreate}
+        edit={PackageEdit}
         recordRepresentation='name'
       />
       <Resource
