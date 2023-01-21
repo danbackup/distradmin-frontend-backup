@@ -14,6 +14,7 @@ import {
   useNotify,
   useRefresh,
   ReferenceField,
+  DeleteButton,
 } from 'react-admin';
 import { Card, Typography, Container } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -209,6 +210,7 @@ export const EventShow = () => {
                         options={{ style: 'currency', currency: 'GBP' }}
                         emptyText={'Not agreed'}
                       />
+                      <DeleteButton redirect={false} />
                     </Datagrid>
                     <CreateRelationButton
                       resourceName='event'

@@ -7,11 +7,20 @@ import {
   SelectInput,
   ReferenceInput,
   BooleanInput,
+  useNotify,
+  useRedirect,
 } from 'react-admin';
 
 export const JobCreate = () => {
+  const notify = useNotify();
+  const redirect = useRedirect();
+
+  const onSuccess = (data) => {
+    redirect(`/events/${data.event}/show/2`);
+    notify('Musician added!', { type: 'success' });
+  };
   return (
-    <Create>
+    <Create mutationOptions={{ onSuccess }}>
       <SimpleForm>
         <ReferenceInput source='event' reference='events'>
           <SelectInput
