@@ -15,7 +15,12 @@ import {
   useRefresh,
   ReferenceField,
 } from 'react-admin';
-import { Card, Typography, Container } from '@mui/material';
+import {
+  Card,
+  Typography,
+  Container,
+  Button as MuiButton,
+} from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import { gapi } from 'gapi-script';
@@ -24,6 +29,7 @@ import {
   buildParamsForNewGoogleDoc,
   saveDocumentIdToDB,
 } from '../../Google/docBuilder.js';
+import { Link } from 'react-router-dom';
 
 const FilteredSetsList = () => {
   const record = useRecordContext();
@@ -47,6 +53,21 @@ const FilteredSetsList = () => {
         </Datagrid>
       </CustomReferenceManyField>
     </Card>
+  );
+};
+
+const CreateRelatedJobButton = () => {
+  const { id } = useRecordContext();
+  return (
+    <MuiButton
+      component={Link}
+      to={{
+        pathname: '/jobs/create',
+      }}
+      state={{ record: { event: id } }}
+    >
+      Add Musician
+    </MuiButton>
   );
 };
 
@@ -209,6 +230,7 @@ export const EventShow = () => {
                         emptyText={'Not agreed'}
                       />
                     </Datagrid>
+                    <CreateRelatedJobButton />
                   </CustomReferenceManyField>
                 </Card>
               );
