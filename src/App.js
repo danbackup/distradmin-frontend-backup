@@ -111,7 +111,7 @@ const App = () => {
         show={MusicianShow}
         icon={GroupsIcon}
       />
-      <Resource name='jobs' list={JobList} create={JobCreate} />
+      <Resource name='jobs' create={JobCreate} />
       <Resource name='sets' show={SetShow} />
       <Resource name='songs' />
       <Resource
