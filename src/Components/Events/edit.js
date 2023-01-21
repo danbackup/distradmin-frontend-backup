@@ -6,8 +6,6 @@ import {
   DateInput,
   TextInput,
   NumberInput,
-  ReferenceArrayInput,
-  AutocompleteArrayInput,
   ReferenceInput,
   SelectInput,
 } from 'react-admin';
@@ -34,19 +32,6 @@ export const EventEdit = () => {
         <NumberInput source='deposit' validate={[required()]} />
         <NumberInput source='amountDue' validate={[required()]} />
         <NumberInput source='profit' validate={[required()]} />
-        <ReferenceArrayInput
-          label='Instruments Required'
-          reference='instruments'
-          source='instruments'
-        >
-          <AutocompleteArrayInput
-            optionText='name'
-            optionValue='id'
-            translateChoice={false}
-            parse={(value) => value && value.map((v) => ({ id: v }))}
-            format={(value) => value && value.map((v) => v.id)}
-          />
-        </ReferenceArrayInput>
       </SimpleForm>
     </Edit>
   );
