@@ -58,9 +58,9 @@ export const EventShow = () => {
   const [isClicked, setIsClicked] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
-    const saveDocWrapper = async (googleDocId) => {
+    const saveDocWrapper = async (response) => {
       try {
-        const result = await saveDocumentIdToDB(record, googleDocId);
+        const result = await saveDocumentIdToDB(record, response.documentId);
         if (result.status !== 200) {
           throw result.status;
         }
@@ -81,7 +81,9 @@ export const EventShow = () => {
         path: 'https://docs.googleapis.com/v1/documents',
         params: buildParamsForNewGoogleDoc(record),
       };
+
       const GoogleAuth = gapi.auth2.getAuthInstance();
+
       await sendAuthorizedApiRequest(
         requestDetails,
         GoogleAuth,

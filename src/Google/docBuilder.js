@@ -1,5 +1,4 @@
 export const buildParamsForNewGoogleDoc = (record) => {
-  console.log('RECORD: ' + JSON.stringify(record));
   return { title: `${record.client} - ${record.date}` };
 };
 

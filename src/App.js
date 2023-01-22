@@ -36,12 +36,12 @@ import { UserEdit } from './Components/Users/edit';
 import { PackageEdit } from './Components/Packages/edit';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAoXvB8w9DPOZPx2crM9pjiDRmAbT7tGKM',
-  authDomain: 'distradmin.firebaseapp.com',
-  projectId: 'distradmin',
-  storageBucket: 'distradmin.appspot.com',
-  messagingSenderId: '513693582210',
-  appId: '1:513693582210:web:85c65680f42dde5d47859b',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
