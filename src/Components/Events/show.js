@@ -27,30 +27,30 @@ import {
 } from '../../Google/docBuilder.js';
 import { CreateRelationButton } from '../custom/createRelationButton.js';
 
-const FilteredSetsList = () => {
-  const record = useRecordContext();
-  if (!record) return null;
-  return record.sets.length === 0 ? (
-    <Card>No linked sets!</Card>
-  ) : (
-    <Card>
-      <CustomReferenceManyField
-        reference='sets'
-        target='event.data.id'
-        resource='sets'
-      >
-        <Container>
-          <Typography variant='h6'>Sets</Typography>
-        </Container>
-        <Datagrid rowClick='show'>
-          <TextField source='name' />
-          <TextField source='start' />
-          <TextField source='end' />
-        </Datagrid>
-      </CustomReferenceManyField>
-    </Card>
-  );
-};
+// const FilteredSetsList = () => {
+//   const record = useRecordContext();
+//   if (!record) return null;
+//   return record.sets.length === 0 ? (
+//     <Card>No linked sets!</Card>
+//   ) : (
+//     <Card>
+//       <CustomReferenceManyField
+//         reference='sets'
+//         target='event.data.id'
+//         resource='sets'
+//       >
+//         <Container>
+//           <Typography variant='h6'>Sets</Typography>
+//         </Container>
+//         <Datagrid rowClick='show'>
+//           <TextField source='name' />
+//           <TextField source='start' />
+//           <TextField source='end' />
+//         </Datagrid>
+//       </CustomReferenceManyField>
+//     </Card>
+//   );
+// };
 
 export const EventShow = () => {
   const notify = useNotify();
@@ -58,9 +58,33 @@ export const EventShow = () => {
   const [isClicked, setIsClicked] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
+    const moveDocToSharedDrive = async (response) => {
+      const docId = response.documentId;
+      console.log('made it to move Doc to shared drive, docId: ', docId);
+
+      const requestDetails = {
+        method: 'PATCH',
+        path: `https://www.googleapis.com/drive/v3/files/${docId}`,
+        params: {
+          addParents: '10EXyxpVqTqHdJJB1S-MkVTTQS-usasgV',
+          enforceSingleParent: true,
+          supportsAllDrives: true,
+        },
+      };
+
+      const GoogleAuth = gapi.auth2.getAuthInstance();
+
+      await sendAuthorizedApiRequest(
+        requestDetails,
+        GoogleAuth,
+        saveDocWrapper
+      );
+    };
+
     const saveDocWrapper = async (response) => {
+      console.log('saving docId to db', response);
       try {
-        const result = await saveDocumentIdToDB(record, response.documentId);
+        const result = await saveDocumentIdToDB(record, response.id);
         if (result.status !== 200) {
           throw result.status;
         }
@@ -75,6 +99,7 @@ export const EventShow = () => {
         console.error(error);
       }
     };
+
     try {
       const requestDetails = {
         method: 'POST',
@@ -87,7 +112,7 @@ export const EventShow = () => {
       await sendAuthorizedApiRequest(
         requestDetails,
         GoogleAuth,
-        saveDocWrapper
+        moveDocToSharedDrive
       );
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -185,7 +210,11 @@ export const EventShow = () => {
           <FunctionField
             render={(record) => {
               return record?.jobs?.length === 0 ? (
-                <div>None</div>
+                <CreateRelationButton
+                  resourceName='event'
+                  path='/jobs/create'
+                  buttonText='Add Musician'
+                />
               ) : (
                 <Card>
                   <CustomReferenceManyField
