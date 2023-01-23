@@ -26,6 +26,7 @@ import {
   saveDocumentIdToDB,
 } from '../../Google/docBuilder.js';
 import { CreateRelationButton } from '../custom/createRelationButton.js';
+import GoogleDocButton from './customEventComponents/googleDocButton.js';
 
 // const FilteredSetsList = () => {
 //   const record = useRecordContext();
@@ -56,8 +57,10 @@ export const EventShow = () => {
   const notify = useNotify();
   const refresh = useRefresh();
   const [isClicked, setIsClicked] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
+    setLoading(true);
     const moveDocToSharedDrive = async (response) => {
       const docId = response.documentId;
       console.log('made it to move Doc to shared drive, docId: ', docId);
@@ -91,7 +94,9 @@ export const EventShow = () => {
         refresh();
         setIsClicked(true);
         notify('Document created', { type: 'success' });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         notify(
           'There was an error when creating the google doc and linking it to this event',
           { type: 'error' }
@@ -115,6 +120,7 @@ export const EventShow = () => {
         moveDocToSharedDrive
       );
     } catch (error) {
+      setLoading(false);
       console.log(JSON.stringify(error));
       notify('There was an error creating the Google Doc.', {
         type: 'error',
@@ -125,8 +131,10 @@ export const EventShow = () => {
   };
 
   const openGoogleDoc = (googleDocId) => {
+    setLoading(true);
     const url = `https://docs.google.com/document/d/${googleDocId}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+    setLoading(false);
   };
 
   return (
@@ -141,30 +149,14 @@ export const EventShow = () => {
         <Tab label='Details'>
           <FunctionField
             render={(record) => {
-              return record.googleDocId || isClicked ? (
-                <div>
-                  <Button
-                    label='Open Document'
-                    size='small'
-                    alignIcon='left'
-                    variant='contained'
-                    color='secondary'
-                    sx={{ width: 200 }}
-                    onClick={() => openGoogleDoc(record.googleDocId)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <Button
-                    label='Create Document'
-                    size='small'
-                    alignIcon='left'
-                    variant='contained'
-                    color='secondary'
-                    sx={{ width: 200 }}
-                    onClick={() => createNewGoogleDoc(record)}
-                  />
-                </div>
+              return (
+                <GoogleDocButton
+                  isLoading={isLoading}
+                  googleDocId={record.googleDocId}
+                  open={openGoogleDoc}
+                  create={createNewGoogleDoc}
+                  record={record}
+                />
               );
             }}
           />
