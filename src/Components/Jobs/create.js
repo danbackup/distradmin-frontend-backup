@@ -32,7 +32,7 @@ export const JobCreate = () => {
           />
         </ReferenceInput>
 
-        <BooleanInput source='canMD' label='MD' />
+        <BooleanInput source='md' label='MD' />
         <ReferenceInput source='musician' reference='musicians'>
           <SelectInput
             validate={[required()]}
