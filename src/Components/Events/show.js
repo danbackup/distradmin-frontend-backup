@@ -83,6 +83,11 @@ export const EventShow = () => {
     };
 
     const populateDocContent = async ({ id: googleDocId }) => {
+      if (!googleDocId) {
+        const GoogleAuth = gapi.auth2.getAuthInstance();
+        GoogleAuth.disconnect();
+        notify('There was an error, please try again!', { type: 'error' });
+      }
       const formattedEventDate = new Date(record.date).toLocaleDateString();
 
       const jobs = await getFromBackend('jobs', record.jobs);
