@@ -77,10 +77,11 @@ const App = () => {
         apiKey: firebaseConfig.apiKey,
         discoveryDocs: [
           'https://docs.googleapis.com/$discovery/rest?version=v1',
+          'https://www.googleapis.com/discovery/v1/apis/drive/v2/rest',
         ],
         clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         scope:
-          'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive.file',
+          'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive',
       });
     };
     gapi.load('client:auth2', start);
