@@ -86,6 +86,7 @@ export const EventShow = () => {
       if (!googleDocId) {
         const GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.disconnect();
+        setLoading(false);
         notify('There was an error, please try again!', { type: 'error' });
       }
       const formattedEventDate = new Date(record.date).toLocaleDateString();
