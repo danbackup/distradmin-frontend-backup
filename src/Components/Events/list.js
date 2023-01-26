@@ -4,18 +4,18 @@ import {
   Datagrid,
   TextField,
   EditButton,
-  DateField,
   NumberField,
   FunctionField,
   ReferenceField,
 } from 'react-admin';
 import { CircularProgressWithLabel } from '../custom/circularProgress';
+import ColouredDateField from './customEventComponents/colouredDateField';
 
 export const EventList = () => {
   return (
-    <List>
+    <List sort={{ field: 'date', order: 'DESC' }}>
       <Datagrid rowClick='show'>
-        <DateField source='date' />
+        <ColouredDateField source='date' />
         <TextField source='type' />
         <ReferenceField
           source='package.data.id'
