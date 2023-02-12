@@ -13,6 +13,7 @@ import {
   useRefresh,
   ReferenceField,
   DeleteButton,
+  usePermissions,
 } from 'react-admin';
 import { Card } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -56,7 +57,7 @@ export const EventShow = () => {
   const notify = useNotify();
   const refresh = useRefresh();
   const [isClicked, setIsClicked] = React.useState(false);
-  const [isLoading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
     setLoading(true);
@@ -205,7 +206,10 @@ export const EventShow = () => {
     setLoading(false);
   };
 
-  return (
+  const { isLoading, permissions } = usePermissions();
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <Show
       title={
         <FunctionField
@@ -219,7 +223,7 @@ export const EventShow = () => {
             render={(record) => {
               return (
                 <GoogleDocButton
-                  isLoading={isLoading}
+                  isLoading={loading}
                   googleDocId={record.googleDocId}
                   open={openGoogleDoc}
                   create={createNewGoogleDoc}
@@ -247,25 +251,27 @@ export const EventShow = () => {
           <TextField source='notes' emptyText='None' />
           {/* <FilteredSetsList /> */}
         </Tab>
-        <Tab label='Finance'>
-          <NumberField
-            label='Price'
-            source='gross'
-            options={{ style: 'currency', currency: 'GBP' }}
-          />
-          <NumberField
-            source='deposit'
-            options={{ style: 'currency', currency: 'GBP' }}
-          />
-          <NumberField
-            source='amountDue'
-            options={{ style: 'currency', currency: 'GBP' }}
-          />
-          <NumberField
-            source='profit'
-            options={{ style: 'currency', currency: 'GBP' }}
-          />
-        </Tab>
+        {permissions === 'Super Admin' && (
+          <Tab label='Finance'>
+            <NumberField
+              label='Price'
+              source='gross'
+              options={{ style: 'currency', currency: 'GBP' }}
+            />
+            <NumberField
+              source='deposit'
+              options={{ style: 'currency', currency: 'GBP' }}
+            />
+            <NumberField
+              source='amountDue'
+              options={{ style: 'currency', currency: 'GBP' }}
+            />
+            <NumberField
+              source='profit'
+              options={{ style: 'currency', currency: 'GBP' }}
+            />
+          </Tab>
+        )}
         <Tab label='Musicians'>
           <FunctionField
             render={(record) => {

@@ -10,10 +10,14 @@ import {
   NumberInput,
   SelectInput,
   ReferenceInput,
+  usePermissions,
 } from 'react-admin';
 
 export const EventCreate = () => {
-  return (
+  const { isLoading, permissions } = usePermissions();
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <Create>
       <SimpleForm>
         <TextInput source='client' validate={[required()]} />
@@ -30,10 +34,14 @@ export const EventCreate = () => {
         </ReferenceInput>
 
         <TextInput source='location' validate={[required()]} />
-        <NumberInput source='gross' validate={[required()]} />
-        <NumberInput source='deposit' validate={[required()]} />
-        <NumberInput source='amountDue' validate={[required()]} />
-        <NumberInput source='profit' validate={[required()]} />
+        {permissions === 'Super Admin' && (
+          <>
+            <NumberInput source='gross' />
+            <NumberInput source='deposit' />
+            <NumberInput source='amountDue' />
+            <NumberInput source='profit' />
+          </>
+        )}
 
         <ReferenceArrayInput
           label='Instruments Required'

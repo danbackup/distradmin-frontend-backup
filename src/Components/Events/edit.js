@@ -8,10 +8,14 @@ import {
   NumberInput,
   ReferenceInput,
   SelectInput,
+  usePermissions,
 } from 'react-admin';
 
 export const EventEdit = () => {
-  return (
+  const { isLoading, permissions } = usePermissions();
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <Edit>
       <SimpleForm>
         <DateInput source='date' validate={[required()]} />
@@ -28,10 +32,14 @@ export const EventEdit = () => {
         <TextInput source='client' validate={[required()]} />
         <TextInput source='location' />
         <TextInput source='notes' />
-        <NumberInput source='gross' validate={[required()]} />
-        <NumberInput source='deposit' validate={[required()]} />
-        <NumberInput source='amountDue' validate={[required()]} />
-        <NumberInput source='profit' validate={[required()]} />
+        {permissions === 'Super Admin' && (
+          <>
+            <NumberInput source='gross' validate={[required()]} />
+            <NumberInput source='deposit' validate={[required()]} />
+            <NumberInput source='amountDue' validate={[required()]} />
+            <NumberInput source='profit' validate={[required()]} />
+          </>
+        )}
       </SimpleForm>
     </Edit>
   );

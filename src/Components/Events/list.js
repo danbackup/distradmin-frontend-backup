@@ -34,19 +34,19 @@ export const EventList = () => {
         <TextField source='team' label='Team' />
 
         {permissions === 'Super Admin' && (
-          <>
-            <NumberField
-              source='profit'
-              options={{ style: 'currency', currency: 'GBP' }}
-            />
-            <FunctionField
-              label='Paid'
-              render={(record) => {
-                const progress = 100 - (record.amountDue / record.gross) * 100;
-                return <CircularProgressWithLabel value={progress} />;
-              }}
-            />
-          </>
+          <NumberField
+            source='profit'
+            options={{ style: 'currency', currency: 'GBP' }}
+          />
+        )}
+        {permissions === 'Super Admin' && (
+          <FunctionField
+            label='Paid'
+            render={(record) => {
+              const progress = 100 - (record.amountDue / record.gross) * 100;
+              return <CircularProgressWithLabel value={progress} />;
+            }}
+          />
         )}
         <EditButton />
       </Datagrid>
