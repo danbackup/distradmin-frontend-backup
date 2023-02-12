@@ -4,7 +4,7 @@ import {
   TextInput,
   required,
   Create,
-  BooleanInput,
+  SelectInput,
 } from 'react-admin';
 
 export const UserCreate = () => {
@@ -13,7 +13,15 @@ export const UserCreate = () => {
       <SimpleForm>
         <TextInput source='name' validate={[required()]} />
         <TextInput source='email' validate={[required()]} />
-        <BooleanInput source='isAdmin' validate={[required()]} />
+        <SelectInput
+          source='role'
+          validate={[required()]}
+          choices={[
+            { id: 'Musician', name: 'Musician' },
+            { id: 'Admin', name: 'Admin' },
+            { id: 'Super Admin', name: 'Super Admin' },
+          ]}
+        />
       </SimpleForm>
     </Create>
   );

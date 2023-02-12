@@ -7,12 +7,16 @@ import {
   NumberField,
   FunctionField,
   ReferenceField,
+  usePermissions,
 } from 'react-admin';
 import { CircularProgressWithLabel } from '../custom/circularProgress';
 import ColouredDateField from './customEventComponents/colouredDateField';
 
 export const EventList = () => {
-  return (
+  const { isLoading, permissions } = usePermissions();
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <List sort={{ field: 'date', order: 'DESC' }}>
       <Datagrid rowClick='show'>
         <ColouredDateField source='date' />
@@ -28,22 +32,22 @@ export const EventList = () => {
         <TextField source='client' label='Client' />
         <TextField source='location' label='Location' />
         <TextField source='team' label='Team' />
-        {/* <NumberField
-          label='Price'
-          source='gross'
-          options={{ style: 'currency', currency: 'GBP' }}
-        /> */}
-        <NumberField
-          source='profit'
-          options={{ style: 'currency', currency: 'GBP' }}
-        />
-        <FunctionField
-          label='Paid'
-          render={(record) => {
-            const progress = 100 - (record.amountDue / record.gross) * 100;
-            return <CircularProgressWithLabel value={progress} />;
-          }}
-        />
+
+        {permissions === 'Super Admin' && (
+          <>
+            <NumberField
+              source='profit'
+              options={{ style: 'currency', currency: 'GBP' }}
+            />
+            <FunctionField
+              label='Paid'
+              render={(record) => {
+                const progress = 100 - (record.amountDue / record.gross) * 100;
+                return <CircularProgressWithLabel value={progress} />;
+              }}
+            />
+          </>
+        )}
         <EditButton />
       </Datagrid>
     </List>

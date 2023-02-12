@@ -4,16 +4,30 @@ import {
   TextInput,
   required,
   Edit,
-  BooleanInput,
+  SelectInput,
+  usePermissions,
 } from 'react-admin';
 
 export const UserEdit = () => {
-  return (
+  const { isLoading, permissions } = usePermissions();
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <Edit>
       <SimpleForm>
         <TextInput source='name' validate={[required()]} disabled />
         <TextInput source='email' validate={[required()]} disabled />
-        <BooleanInput source='isAdmin' validate={[required()]} />
+        {permissions === 'Super Admin' && (
+          <SelectInput
+            source='role'
+            validate={[required()]}
+            choices={[
+              { id: 'Musician', name: 'Musician' },
+              { id: 'Admin', name: 'Admin' },
+              { id: 'Super Admin', name: 'Super Admin' },
+            ]}
+          />
+        )}
       </SimpleForm>
     </Edit>
   );

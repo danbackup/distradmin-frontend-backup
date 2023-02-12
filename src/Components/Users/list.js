@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  List,
-  Datagrid,
-  TextField,
-  EditButton,
-  BooleanField,
-} from 'react-admin';
+import { List, Datagrid, TextField, EditButton } from 'react-admin';
 
 const UsersList = () => {
   return (
@@ -13,7 +7,7 @@ const UsersList = () => {
       <Datagrid rowClick='show'>
         <TextField source='name' />
         <TextField source='email' />
-        <BooleanField source='isAdmin' label='Admin?' />
+        <TextField source='role' />
         <EditButton />
       </Datagrid>
     </List>

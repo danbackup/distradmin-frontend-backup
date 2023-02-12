@@ -13,7 +13,7 @@ export const GoogleRedirect = async () => {
   result
     .json()
     .then(async ({ jwt, user }) => {
-      console.log('user: ', user);
+      localStorage.setItem('gUser', JSON.stringify(user));
       const isAdmin = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/admins/check?email=${user.email}`
       );
