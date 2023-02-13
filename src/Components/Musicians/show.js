@@ -45,7 +45,12 @@ const FilteredEventList = () => {
         target='musician.data.id'
         resource='jobs'
       >
-        <Datagrid bulkActionButtons={false}>
+        <Datagrid
+          bulkActionButtons={false}
+          rowClick={(id, resource, record) =>
+            `/events/${record.event.data.id}/show`
+          }
+        >
           <DateField
             label='Date'
             source='event.data.attributes.date'
