@@ -288,7 +288,12 @@ export const EventShow = () => {
                     target='event.data.id'
                     resource='jobs'
                   >
-                    <Datagrid bulkActionButtons={false}>
+                    <Datagrid
+                      bulkActionButtons={false}
+                      rowClick={(id, resource, record) =>
+                        `/musicians/${record.musician.data.id}/show`
+                      }
+                    >
                       <BooleanField source='md' TrueIcon={MilitaryTechIcon} />
                       <FunctionField
                         label='Musician'
@@ -301,12 +306,14 @@ export const EventShow = () => {
                         label='Instrument'
                       />
                       <BooleanField source='hotelRequired' />
-                      <NumberField
-                        label='Wage'
-                        source='wage'
-                        options={{ style: 'currency', currency: 'GBP' }}
-                        emptyText={'Not agreed'}
-                      />
+                      {permissions === 'Super Admin' && (
+                        <NumberField
+                          label='Wage'
+                          source='wage'
+                          options={{ style: 'currency', currency: 'GBP' }}
+                          emptyText={'Not agreed'}
+                        />
+                      )}
                       <DeleteButton redirect={false} />
                     </Datagrid>
                     <CreateRelationButton
