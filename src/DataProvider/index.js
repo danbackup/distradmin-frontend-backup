@@ -11,6 +11,8 @@ import {
   DELETE,
   DELETE_MANY,
 } from 'react-admin';
+import qs from 'qs';
+import { createStrapiFilters } from './strapiFilters';
 
 /**
  * Maps react-admin queries to a simple REST API
@@ -88,42 +90,19 @@ export const DataProvider = (
         : 'sort[0]=' + s.field + ':' + s.order;
 
     // Handle FILTER
-    const f = params.filter;
-    console.log('Filter: ', f);
-    let filter = '';
-    const keys = Object.keys(f);
-    for (let i = 0; i < keys.length; i++) {
-      //react-admin uses q filter in several components and strapi use _q
-      if (f[keys[i]]) {
-        if (keys[i] === 'q' && f.q !== '') {
-          filter += '_q=' + f[keys[i]] + (keys[i + 1] ? '&' : '');
-        } else if (Array.isArray(f[keys[i]])) {
-          const arrayOfFilterValues = f[keys[i]];
-          arrayOfFilterValues.forEach((val, idx) => {
-            filter += `&filters[${keys[i]}][$in][${idx}]=${val}`;
-          });
-        } else {
-          filter +=
-            `&filters[${keys[i]}]=` + f[keys[i]] + (keys[i + 1] ? '&' : '');
-        }
-      }
-    }
-    if (params.id && params.target && params.target.indexOf('_id') !== -1) {
-      const target = params.target.substring(0, params.target.length - 3);
-      console.log('target: ' + target);
-      filter += '&' + target + '=' + params.id;
-    }
-
-    // filters[id][$in][0]=3&filters[id][$in][1]=6&filters[id][$in][2]=8
-    // filters[$in][0][id]=1&filters[$in][1][id]=2&populate=%2A
+    const filterString = createStrapiFilters(params.filter);
 
     // Handle PAGINATION
     const { page, perPage } = params.pagination;
     const pagination =
       'pagination[page]=' + page + '&pagination[pageSize]=' + perPage;
 
-    console.log('returning from filter: ', sort + '&' + pagination + filter);
-    return sort + '&' + pagination + filter;
+    console.log(
+      'returning from filter: ',
+      // sort + '&' + pagination +
+      filterString
+    );
+    return sort + '&' + pagination + filterString;
   };
 
   // Determines if there are new files to upload
