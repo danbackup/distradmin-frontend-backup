@@ -228,14 +228,7 @@ export const EventShow = () => {
               );
             }}
           />
-          <ReferenceField
-            source='package.id'
-            reference='packages'
-            sortable={false}
-            label='Package'
-          >
-            <TextField source='name' />
-          </ReferenceField>
+          <TextField source='package.data.attributes.name' label='Package' />
           <TextField source='type' emptyText='No event type assigned' />
           <TextField
             source='client'

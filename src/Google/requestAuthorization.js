@@ -20,9 +20,10 @@ const isAuthorized = (GoogleAuth, requestScope) => {
     if (GoogleAuth.currentUser.get().xc.scope.includes(requestScope)) {
       return true;
     }
-    GoogleAuth.disconnect();
+    throw new Error('User does not have the correct scopes');
   } catch (e) {
-    console.error('User does not have the correct scopes');
+    GoogleAuth.disconnect();
+    console.error(e);
     return false;
   }
 };
