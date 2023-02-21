@@ -60,6 +60,7 @@ export const EventShow = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
+    const GoogleAuth = gapi.auth2.getAuthInstance();
     setLoading(true);
 
     const saveDocWrapper = async ({ documentId }) => {
@@ -85,7 +86,6 @@ export const EventShow = () => {
 
     const populateDocContent = async ({ id: googleDocId }) => {
       if (!googleDocId) {
-        const GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.disconnect();
         setLoading(false);
         notify('There was an error, please try again!', { type: 'error' });
@@ -143,8 +143,6 @@ export const EventShow = () => {
           },
         };
 
-        const GoogleAuth = gapi.auth2.getAuthInstance();
-
         await sendAuthorizedApiRequest(
           requestDetails,
           GoogleAuth,
@@ -179,8 +177,6 @@ export const EventShow = () => {
           name: `${record.client} - ${formattedEventDate}`,
         },
       };
-
-      const GoogleAuth = gapi.auth2.getAuthInstance();
 
       await sendAuthorizedApiRequest(
         requestDetails,
