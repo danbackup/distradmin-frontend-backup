@@ -1,29 +1,21 @@
-import { gapi } from 'gapi-script';
+import { AuthProvider } from '../Auth/AuthProvider';
 
 export const sendAuthorizedApiRequest = async (
-  requestDetails,
-  GoogleAuth,
-  callback,
-  scope
+  method,
+  body,
+  params,
+  endpoint
 ) => {
-  if (isAuthorized(GoogleAuth, scope)) {
-    const request = gapi.client.request(requestDetails);
-    return request.execute((response) => callback(response));
-  } else {
-    GoogleAuth.signIn();
-  }
-};
-
-const isAuthorized = (GoogleAuth, requestScope) => {
-  console.log(GoogleAuth.currentUser.get());
-  try {
-    if (GoogleAuth.currentUser.get().xc.scope.includes(requestScope)) {
-      return true;
-    }
-    throw new Error('User does not have the correct scopes');
-  } catch (e) {
-    GoogleAuth.disconnect();
-    console.error(e);
-    return false;
-  }
+  if (!localStorage.getItem('accessToken')) AuthProvider.logout();
+  const res = await fetch(endpoint, {
+    method,
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+    params,
+    body,
+  });
+  return res.json();
 };
