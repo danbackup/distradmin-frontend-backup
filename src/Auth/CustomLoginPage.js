@@ -7,7 +7,6 @@ const CustomLoginPage = (props) => {
   const notify = useNotify();
 
   const login = useGoogleLogin({
-    flow: 'implicit',
     scope:
       'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive',
     onSuccess: async (tokenResponse) => {

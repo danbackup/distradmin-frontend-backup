@@ -43,4 +43,10 @@ export const AuthProvider = {
     const role = user.data[0].attributes.role;
     return role;
   },
+  handleCallback(response) {
+    console.log('AUTH PROV RES: ', response);
+    const googleJWT = response.credential;
+
+    return '/events';
+  },
 };
