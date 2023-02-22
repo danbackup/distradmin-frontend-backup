@@ -1,3 +1,5 @@
+import { googleLogout } from '@react-oauth/google';
+
 export const AuthProvider = {
   login() {
     return '/events';
@@ -7,6 +9,7 @@ export const AuthProvider = {
     return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
   },
   logout() {
+    googleLogout();
     localStorage.removeItem('token');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('gUser');
@@ -39,11 +42,5 @@ export const AuthProvider = {
     }
     const role = user.data[0].attributes.role;
     return role;
-  },
-  handleCallback(response) {
-    console.log('AUTH PROV RES: ', response);
-    const googleJWT = response.credential;
-
-    return '/events';
   },
 };
