@@ -11,20 +11,22 @@ import {
   BooleanField,
   useNotify,
   useRefresh,
+  ReferenceField,
   DeleteButton,
   usePermissions,
 } from 'react-admin';
 import { Card } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import { gapi } from 'gapi-script';
+import { sendAuthorizedApiRequest } from '../../Google/requestAuthorization.js';
+import {
+  buildBatchUpdates,
+  saveDocumentIdToDB,
+} from '../../Google/docBuilder.js';
 import { CreateRelationButton } from '../custom/createRelationButton.js';
 import GoogleDocButton from './customEventComponents/googleDocButton.js';
-
-import {
-  createGoogleDocFromTemplate,
-  populateDocContent,
-  saveDocumentIdToDB,
-} from '../../Google/docCreation';
+import { getFromBackend } from '../../DataProvider/backendHelpers.js';
 
 // const FilteredSetsList = () => {
 //   const record = useRecordContext();
@@ -54,36 +56,142 @@ import {
 export const EventShow = () => {
   const notify = useNotify();
   const refresh = useRefresh();
+  const [isClicked, setIsClicked] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
+    const GoogleAuth = gapi.auth2.getAuthInstance();
     setLoading(true);
-    const formattedEventDate = new Date(record.date).toLocaleDateString();
+
+    const saveDocWrapper = async ({ documentId }) => {
+      console.log('saving docId to db', documentId);
+      try {
+        const result = await saveDocumentIdToDB(record, documentId);
+        if (result.status !== 200) {
+          throw result.status;
+        }
+        refresh();
+        setIsClicked(true);
+        notify('Document created', { type: 'success' });
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        notify(
+          'There was an error when creating the google doc and linking it to this event',
+          { type: 'error' }
+        );
+        console.error(error);
+      }
+    };
+
+    const populateDocContent = async ({ id: googleDocId }) => {
+      if (!googleDocId) {
+        GoogleAuth.disconnect();
+        setLoading(false);
+        notify('There was an error, please try again!', { type: 'error' });
+      }
+      const formattedEventDate = new Date(record.date).toLocaleDateString();
+
+      const jobs = await getFromBackend('jobs', record.jobs);
+
+      const jobDetailsArray = jobs.data.map((job) => {
+        const musician = job.attributes.musician.data.attributes;
+        const instrument = job.attributes.instrument.data.attributes;
+
+        let jobString = `${musician.fName} ${musician.lName} - ${instrument.name}`;
+        console.log('IS MD? ', job.attributes.md);
+        return job.attributes.md ? jobString + '/MD' : jobString;
+      });
+
+      const requests = buildBatchUpdates([
+        {
+          textToReplace: '{{eventType}}',
+          content: record.type,
+        },
+        {
+          textToReplace: '{{package}}',
+          content: record.package.name,
+        },
+        {
+          textToReplace: '{{client}}',
+          content: record.client,
+        },
+        {
+          textToReplace: '{{date}}',
+          content: formattedEventDate,
+        },
+        {
+          textToReplace: '{{jobs}}',
+          content: jobDetailsArray.join('\n'),
+        },
+        {
+          textToReplace: '{{address}}',
+          content: record.location,
+        },
+        {
+          textToReplace: '{{notes}}',
+          content: record.notes,
+        },
+      ]);
+
+      try {
+        const requestDetails = {
+          method: 'POST',
+          path: `https://docs.googleapis.com/v1/documents/${googleDocId}:batchUpdate`,
+          body: {
+            requests,
+          },
+        };
+
+        await sendAuthorizedApiRequest(
+          requestDetails,
+          GoogleAuth,
+          saveDocWrapper,
+          'https://www.googleapis.com/auth/drive'
+        );
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+        notify(
+          'There was an error poppulating the content of the Google Doc.',
+          {
+            type: 'error',
+            undoable: false,
+            autoHideDuration: 3000,
+          }
+        );
+      }
+    };
+
     try {
-      //MAKE NEW GOOGLE DOC BY COPYING TEMPLATE TO CORRECT FOLDER
-      const { id: newDocId } = await createGoogleDocFromTemplate(
-        record,
-        formattedEventDate
+      const formattedEventDate = new Date(record.date).toLocaleDateString();
+      const requestDetails = {
+        method: 'POST',
+        path: `https://www.googleapis.com/drive/v3/files/1_VQBWLCrHLSiy3j1TicaLt2O8PIDf3ayPHG5woemsVU/copy`,
+        params: {
+          supportsSharedDrives: true,
+          fields: 'id',
+        },
+        body: {
+          parents: ['10EXyxpVqTqHdJJB1S-MkVTTQS-usasgV'],
+          name: `${record.client} - ${formattedEventDate}`,
+        },
+      };
+
+      await sendAuthorizedApiRequest(
+        requestDetails,
+        GoogleAuth,
+        populateDocContent,
+        'https://www.googleapis.com/auth/drive'
       );
-      notify('Document created in google drive from template.', {
-        type: 'success',
-      });
-
-      await saveDocumentIdToDB(record, newDocId);
-      notify('Document saved to DB, now populating content', {
-        type: 'success',
-      });
-
-      populateDocContent(record, newDocId, formattedEventDate);
-      notify('Document successfully populated', { type: 'success' });
-
-      refresh();
+    } catch (error) {
       setLoading(false);
-    } catch (err) {
-      console.error(err);
-      notify('There was an error creating the document', { type: 'error' });
-      setLoading(false);
-      refresh();
+      console.error(error);
+      notify('There was an error creating the Google Doc.', {
+        type: 'error',
+        undoable: false,
+        autoHideDuration: 3000,
+      });
     }
   };
 

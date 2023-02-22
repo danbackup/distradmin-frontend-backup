@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Admin, fetchUtils, Resource } from 'react-admin';
+import { Admin, CustomRoutes, fetchUtils, Resource } from 'react-admin';
 import { EventCreate } from './Components/Events/create';
 import { EventList } from './Components/Events/list';
 import { EventShow } from './Components/Events/show';
@@ -16,6 +16,7 @@ import { InstrumentEdit } from './Components/Instruments/edit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PianoIcon from '@mui/icons-material/Piano';
+import { FirebaseAuthProvider } from 'react-admin-firebase';
 import CustomLoginPage from './Auth/CustomLoginPage';
 import { EventEdit } from './Components/Events/edit';
 import PackagesList from './Components/Packages/list';
@@ -23,12 +24,37 @@ import NightlifeIcon from '@mui/icons-material/Nightlife';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { PackageShow } from './Components/Packages/show';
 import { PackageCreate } from './Components/Packages/create';
+import firebase from 'firebase/compat/app';
+import { gapi } from 'gapi-script';
 import { AuthProvider } from './Auth/AuthProvider';
+import { Route } from 'react-router-dom';
+import { GoogleRedirect } from './Auth/GoogleRedirect';
 import { JobCreate } from './Components/Jobs/create';
 import UsersList from './Components/Users/list';
 import { UserCreate } from './Components/Users/create';
 import { UserEdit } from './Components/Users/edit';
 import { PackageEdit } from './Components/Packages/edit';
+
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+};
+
+firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    user.getIdToken().then(function (idToken) {
+      console.log('JWT', idToken);
+      localStorage.setItem('jwt', idToken);
+      return idToken;
+    });
+  }
+});
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -45,12 +71,31 @@ const dataProvider = DataProvider(
 );
 
 const App = () => {
+  React.useEffect(() => {
+    const start = async () => {
+      await gapi.client.init({
+        apiKey: firebaseConfig.apiKey,
+        discoveryDocs: [
+          'https://docs.googleapis.com/$discovery/rest?version=v1',
+          'https://www.googleapis.com/discovery/v1/apis/drive/v2/rest',
+        ],
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        scope:
+          'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive',
+      });
+    };
+    gapi.load('client:auth2', start);
+  });
+
   return (
     <Admin
       dataProvider={dataProvider}
       authProvider={AuthProvider}
       loginPage={CustomLoginPage}
     >
+      <CustomRoutes noLayout>
+        <Route path='/connect/google/redirect' element={<GoogleRedirect />} />
+      </CustomRoutes>
       <Resource
         name='events'
         edit={EventEdit}
