@@ -25,7 +25,7 @@ const FilteredEventList = () => {
     <Card>
       <CustomReferenceManyField
         reference='events'
-        target='package.data.id'
+        target='event-type.data.id'
         resource='events'
       >
         <Datagrid rowClick={'show'} bulkActionButtons={false}>
@@ -38,7 +38,7 @@ const FilteredEventList = () => {
   );
 };
 
-export const PackageShow = () => {
+export const EventTypeShow = () => {
   return (
     <Show title={<Title />}>
       <TabbedShowLayout>

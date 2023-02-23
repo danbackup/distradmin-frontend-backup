@@ -26,6 +26,7 @@ export const EventList = () => {
           reference='packages'
           sortable={false}
           label='Package'
+          link='show'
         >
           <TextField source='name' />
         </ReferenceField>

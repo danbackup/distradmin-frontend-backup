@@ -16,11 +16,12 @@ import { InstrumentEdit } from './Components/Instruments/edit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PianoIcon from '@mui/icons-material/Piano';
+import FestivalIcon from '@mui/icons-material/Festival';
+import NightlifeIcon from '@mui/icons-material/Nightlife';
 import { FirebaseAuthProvider } from 'react-admin-firebase';
 import CustomLoginPage from './Auth/CustomLoginPage';
 import { EventEdit } from './Components/Events/edit';
 import PackagesList from './Components/Packages/list';
-import NightlifeIcon from '@mui/icons-material/Nightlife';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { PackageShow } from './Components/Packages/show';
 import { PackageCreate } from './Components/Packages/create';
@@ -34,6 +35,10 @@ import UsersList from './Components/Users/list';
 import { UserCreate } from './Components/Users/create';
 import { UserEdit } from './Components/Users/edit';
 import { PackageEdit } from './Components/Packages/edit';
+import EventTypesList from './Components/Event-types/list';
+import { EventTypeShow } from './Components/Event-types/show';
+import { EventTypeCreate } from './Components/Event-types/create';
+import { EventTypeEdit } from './Components/Event-types/edit';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -130,6 +135,15 @@ const App = () => {
         show={PackageShow}
         create={PackageCreate}
         edit={PackageEdit}
+        recordRepresentation='name'
+      />
+      <Resource
+        name='event-types'
+        icon={FestivalIcon}
+        list={EventTypesList}
+        show={EventTypeShow}
+        create={EventTypeCreate}
+        edit={EventTypeEdit}
         recordRepresentation='name'
       />
       <Resource
