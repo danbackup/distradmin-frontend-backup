@@ -22,7 +22,7 @@ export const EventCreate = () => {
       <SimpleForm>
         <TextInput source='client' validate={[required()]} />
         <DateInput source='date' validate={[required()]} />
-        <ReferenceInput source='eventType' reference='types'>
+        <ReferenceInput source='type' reference='types'>
           <SelectInput
             validate={[required()]}
             optionText='name'
