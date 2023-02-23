@@ -19,7 +19,7 @@ export const AuthProvider = {
   },
   getPermissions: async () => {
     const { email } = JSON.parse(localStorage.getItem('gUser'));
-
+    console.log(`checking permissions for ${email}`);
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/api/admins?filters[email][$eq]=${email}&populate=*`,
       {

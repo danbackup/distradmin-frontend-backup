@@ -138,7 +138,7 @@ const App = () => {
         recordRepresentation='name'
       />
       <Resource
-        name='event-types'
+        name='types'
         icon={FestivalIcon}
         list={EventTypesList}
         show={EventTypeShow}

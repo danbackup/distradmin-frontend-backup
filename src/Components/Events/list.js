@@ -20,7 +20,7 @@ export const EventList = () => {
     <List sort={{ field: 'date', order: 'DESC' }}>
       <Datagrid rowClick='show'>
         <ColouredDateField source='date' />
-        <TextField source='type' />
+        {/* <TextField source='type' /> */}
         <ReferenceField
           source='package.data.id'
           reference='packages'

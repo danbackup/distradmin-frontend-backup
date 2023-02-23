@@ -19,7 +19,13 @@ export const EventEdit = () => {
     <Edit>
       <SimpleForm>
         <DateInput source='date' validate={[required()]} />
-        <TextInput source='type' />
+        <ReferenceInput
+          source='eventType.id'
+          reference='types'
+          sortable={false}
+        >
+          <SelectInput label='Event Type' validate={[required()]} />
+        </ReferenceInput>
 
         <ReferenceInput
           source='package.id'

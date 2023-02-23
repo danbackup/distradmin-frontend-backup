@@ -14,6 +14,7 @@ import {
   useRecordContext,
   ArrayField,
   ReferenceArrayField,
+  usePermissions,
 } from 'react-admin';
 import { Card, Container, Typography } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
@@ -30,9 +31,12 @@ const Title = () => {
 };
 
 const FilteredEventList = () => {
+  const { permissions, isLoading } = usePermissions();
   const record = useRecordContext();
   if (!record) return null;
-  return record.jobs.length === 0 ? (
+  return isLoading ? (
+    <div>Checking Permissions...</div>
+  ) : record.jobs.length === 0 ? (
     <Card>
       <Container>
         <Typography variant='h5'>No Events</Typography>
@@ -66,12 +70,15 @@ const FilteredEventList = () => {
             source='instrument.data.attributes.name'
             sortable={false}
           />
-          <NumberField
-            label='Wage'
-            source='wage'
-            options={{ style: 'currency', currency: 'GBP' }}
-            emptyText={'Not agreed'}
-          />
+
+          {permissions === 'Super Admin' && (
+            <NumberField
+              label='Wage'
+              source='wage'
+              options={{ style: 'currency', currency: 'GBP' }}
+              emptyText={'Not agreed'}
+            />
+          )}
           <BooleanField source='md' />
         </Datagrid>
       </CustomReferenceManyField>

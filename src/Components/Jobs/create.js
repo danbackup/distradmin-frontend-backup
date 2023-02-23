@@ -9,17 +9,21 @@ import {
   BooleanInput,
   useNotify,
   useRedirect,
+  usePermissions,
 } from 'react-admin';
 
 export const JobCreate = () => {
   const notify = useNotify();
   const redirect = useRedirect();
+  const { isLoading, permissions } = usePermissions();
 
   const onSuccess = (data) => {
     redirect(`/events/${data.event}/show/2`);
     notify('Musician added!', { type: 'success' });
   };
-  return (
+  return isLoading ? (
+    <div>Checking permissions...</div>
+  ) : (
     <Create mutationOptions={{ onSuccess }}>
       <SimpleForm>
         <ReferenceInput source='event' reference='events'>
@@ -50,7 +54,7 @@ export const JobCreate = () => {
           />
         </ReferenceInput>
         <BooleanInput source='hotelRequired' label='Hotel Required' />
-        <NumberInput source='wage' validate={[required()]} />
+        {permissions === 'Super Admin' && <NumberInput source='wage' />}
       </SimpleForm>
     </Create>
   );

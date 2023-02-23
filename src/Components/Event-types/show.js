@@ -25,7 +25,7 @@ const FilteredEventList = () => {
     <Card>
       <CustomReferenceManyField
         reference='events'
-        target='event-type.data.id'
+        target='type.data.id'
         resource='events'
       >
         <Datagrid rowClick={'show'} bulkActionButtons={false}>

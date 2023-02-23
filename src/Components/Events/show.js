@@ -11,7 +11,6 @@ import {
   BooleanField,
   useNotify,
   useRefresh,
-  ReferenceField,
   DeleteButton,
   usePermissions,
 } from 'react-admin';
@@ -228,8 +227,16 @@ export const EventShow = () => {
               );
             }}
           />
-          <TextField source='package.data.attributes.name' label='Package' />
-          <TextField source='type' emptyText='No event type assigned' />
+          <TextField
+            source='package.data.attributes.name'
+            label='Package'
+            emptyText='No package assigned'
+          />
+          <TextField
+            source='eventType.data.attributes.name'
+            emptyText='No event type assigned'
+            label='Event Type'
+          />
           <TextField
             source='client'
             label='Client'
