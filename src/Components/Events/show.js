@@ -233,7 +233,7 @@ export const EventShow = () => {
             emptyText='No package assigned'
           />
           <TextField
-            source='eventType.data.attributes.name'
+            source='type.data.attributes.name'
             emptyText='No event type assigned'
             label='Event Type'
           />
