@@ -12,7 +12,7 @@ const CustomLoginPage = (props) => {
     // scope:
     //   'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive',
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
+      console.log('Token Response: ', JSON.stringify(tokenResponse));
       const accessToken = tokenResponse.access_token;
       try {
         const result = await fetch(
@@ -38,10 +38,12 @@ const CustomLoginPage = (props) => {
         notify(err);
       }
     },
-    prompt: 'consent',
+    prompt: 'select_account',
+    scope: 'https://www.googleapis.com/auth/drive',
   });
 
   return <button onClick={() => login()}>Sign in with Google 🚀 </button>;
 };
 
 export default CustomLoginPage;
+

@@ -25,6 +25,7 @@ import {
 import { CreateRelationButton } from '../custom/createRelationButton.js';
 import GoogleDocButton from './customEventComponents/googleDocButton.js';
 import { getFromBackend } from '../../DataProvider/backendHelpers.js';
+import { promptForGoogleAccess } from '../../Google/prompt.js';
 
 // const FilteredSetsList = () => {
 //   const record = useRecordContext();
@@ -58,8 +59,8 @@ export const EventShow = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
-    // const GoogleAuth = gapi.auth2.getAuthInstance();
     setLoading(true);
+    promptForGoogleAccess();
 
     const saveDocWrapper = async ({ documentId }) => {
       console.log('saving docId to db', documentId);
