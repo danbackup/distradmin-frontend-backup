@@ -17,7 +17,6 @@ import {
 import { Card } from '@mui/material';
 import { CustomReferenceManyField } from '../custom/CustomReferenceManyField.js';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
-import { gapi } from 'gapi-script';
 import { sendAuthorizedApiRequest } from '../../Google/requestAuthorization.js';
 import {
   buildBatchUpdates,
@@ -59,7 +58,7 @@ export const EventShow = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createNewGoogleDoc = async (record) => {
-    const GoogleAuth = gapi.auth2.getAuthInstance();
+    // const GoogleAuth = gapi.auth2.getAuthInstance();
     setLoading(true);
 
     const saveDocWrapper = async ({ documentId }) => {
@@ -85,7 +84,7 @@ export const EventShow = () => {
 
     const populateDocContent = async ({ id: googleDocId }) => {
       if (!googleDocId) {
-        GoogleAuth.disconnect();
+        // GoogleAuth.disconnect();
         setLoading(false);
         notify('There was an error, please try again!', { type: 'error' });
       }
@@ -144,7 +143,7 @@ export const EventShow = () => {
 
         await sendAuthorizedApiRequest(
           requestDetails,
-          GoogleAuth,
+          // GoogleAuth,
           saveDocWrapper,
           'https://www.googleapis.com/auth/drive'
         );
@@ -179,7 +178,7 @@ export const EventShow = () => {
 
       await sendAuthorizedApiRequest(
         requestDetails,
-        GoogleAuth,
+        // GoogleAuth,
         populateDocContent,
         'https://www.googleapis.com/auth/drive'
       );

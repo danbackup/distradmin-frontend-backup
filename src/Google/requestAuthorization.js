@@ -1,5 +1,3 @@
-import { gapi } from 'gapi-script';
-
 export const sendAuthorizedApiRequest = async (
   requestDetails,
   GoogleAuth,
@@ -7,8 +5,8 @@ export const sendAuthorizedApiRequest = async (
   scope
 ) => {
   if (isAuthorized(GoogleAuth, scope)) {
-    const request = gapi.client.request(requestDetails);
-    return request.execute((response) => callback(response));
+    // const request = gapi.client.request(requestDetails);
+    // return request.execute((response) => callback(response));
   } else {
     GoogleAuth.signIn();
   }
