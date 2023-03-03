@@ -18,7 +18,7 @@ export const JobCreate = () => {
   const { isLoading, permissions } = usePermissions();
 
   const onSuccess = (data) => {
-    redirect(`/events/${data.event}/show/2`);
+    redirect(`/events/${data.event}/show/1`);
     notify('Musician added!', { type: 'success' });
   };
   return isLoading ? (
