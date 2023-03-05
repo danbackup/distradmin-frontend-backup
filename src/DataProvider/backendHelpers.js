@@ -12,7 +12,7 @@ export const getFromBackend = async (collectionType, ids) => {
   console.log('FILTER STRING: ', filterString);
 
   const res = await fetch(
-    `http://localhost:1337/api/${collectionType}${filterString}&populate=*`,
+    `${process.env.REACT_APP_BACKEND_URL}/api/${collectionType}${filterString}&populate=*`,
     {
       headers: {
         Authorization: `Bearer ${jwt}`,
