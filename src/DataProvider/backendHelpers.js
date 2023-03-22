@@ -1,8 +1,8 @@
 export const getFromBackend = async (collectionType, ids) => {
   const jwt = localStorage.getItem('token');
-
+  let filterString;
   if(ids) {
-    let filterString = `?`;
+    filterString = `?`;
     ids.forEach((id, idx) => {
       if (idx !== 0) {
         filterString += '&';
