@@ -11,11 +11,18 @@ import {
   useRedirect,
   usePermissions,
 } from 'react-admin';
+import { getFromBackend } from '../../DataProvider/backendHelpers';
+
+const getMusicians = () => {
+  const {data: musicians} = getFromBackend("musicians");
+  return musicians;
+}
 
 export const JobCreate = () => {
   const notify = useNotify();
   const redirect = useRedirect();
   const { isLoading, permissions } = usePermissions();
+  const musicianChoices = getMusicians();
 
   const onSuccess = (data) => {
     const redirectPath = permissions === "Super Admin" ? `events/${data.event}/show/2` : `/events/${data.event}/show/1`;
@@ -38,14 +45,13 @@ export const JobCreate = () => {
         </ReferenceInput>
 
         <BooleanInput source='md' label='MD' />
-        <ReferenceInput source='musician' reference='musicians'>
           <SelectInput
             validate={[required()]}
-            optionText={(record) => `${record.fName} ${record.lName}`}
+            optionText={(record) => `${record.attributes.fName} ${record.attributes.lName}`}
             optionValue='id'
+            choices={musicianChoices}
             // translateChoice={false}
           />
-        </ReferenceInput>
         <ReferenceInput source='instrument' reference='instruments'>
           <SelectInput
             validate={[required()]}
