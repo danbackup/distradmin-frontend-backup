@@ -46,6 +46,7 @@ export const JobCreate = () => {
 
         <BooleanInput source='md' label='MD' />
           <SelectInput
+            source="musician"
             validate={[required()]}
             optionText={(record) => `${record.attributes.fName} ${record.attributes.lName}`}
             optionValue='id'
