@@ -1,13 +1,15 @@
 export const getFromBackend = async (collectionType, ids) => {
   const jwt = localStorage.getItem('token');
-  let filterString = `?`;
-  
-  ids.forEach((id, idx) => {
-    if (idx !== 0) {
-      filterString += '&';
-    }
-    filterString += `filters[$or][${idx}][id][$eq]=${id}`;
-  });
+
+  if(ids) {
+    let filterString = `?`;
+    ids.forEach((id, idx) => {
+      if (idx !== 0) {
+        filterString += '&';
+      }
+      filterString += `filters[$or][${idx}][id][$eq]=${id}`;
+    });
+  }
 
   console.log('FILTER STRING: ', filterString);
 

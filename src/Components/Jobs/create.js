@@ -41,7 +41,7 @@ export const JobCreate = () => {
         <ReferenceInput source='musician' reference='musicians'>
           <SelectInput
             validate={[required()]}
-            optionText='fName'
+            optionText={(record) => `${record.fName} ${record.lName}`}
             optionValue='id'
             // translateChoice={false}
           />
